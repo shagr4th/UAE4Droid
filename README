@@ -1,0 +1,8 @@
+Version based from an old source package of UAE4all for gp2x ...
+
+NB: cyclone core is ok and faster on some Android devices, but more crash prone (as it's pure ARM assembly I guess, maybe some particular chips don't like it)
+
+- 0.991 alpha:
+
+2 players support (need more settings)
+
