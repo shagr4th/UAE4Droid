@@ -1,0 +1,90 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+/* 
+**
+** Copyright 2008, The Android Open Source Project
+**
+** Licensed under the Apache License, Version 2.0 (the "License"); 
+** you may not use this file except in compliance with the License. 
+** You may obtain a copy of the License at 
+**
+**     http://www.apache.org/licenses/LICENSE-2.0 
+**
+** Unless required by applicable law or agreed to in writing, software 
+** distributed under the License is distributed on an "AS IS" BASIS, 
+** WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. 
+** See the License for the specific language governing permissions and 
+** limitations under the License.
+*/
+-->
+
+<Keyboard xmlns:android="http://schemas.android.com/apk/res/android"
+    android:keyWidth="10%p"
+    android:horizontalGap="0px"
+    android:verticalGap="0px"
+    android:keyHeight="@dimen/key_height"
+    
+    >
+    
+    <Row>
+        <Key android:codes="1008" android:keyLabel="1" android:keyEdgeFlags="left"/>
+        <Key android:codes="1009" android:keyLabel="2"/>
+        <Key android:codes="1010" android:keyLabel="3"/>
+        <Key android:codes="1011" android:keyLabel="4"/>
+        <Key android:codes="1012" android:keyLabel="5"/>
+        <Key android:codes="1013" android:keyLabel="6"/>
+        <Key android:codes="1014" android:keyLabel="7"/>
+        <Key android:codes="1015" android:keyLabel="8"/>
+        <Key android:codes="1016" android:keyLabel="9"/>
+        <Key android:codes="1007" android:keyLabel="0" android:keyEdgeFlags="right"/>
+    </Row>
+	
+	<Row>
+        <Key android:codes="1045" android:keyLabel="Q" android:keyEdgeFlags="left"/>
+        <Key android:codes="1051" android:keyLabel="W"/>
+        <Key android:codes="1033" android:keyLabel="E"/>
+        <Key android:codes="1046" android:keyLabel="R"/>
+        <Key android:codes="1048" android:keyLabel="T"/>
+        <Key android:codes="1053" android:keyLabel="Y"/>
+        <Key android:codes="1049" android:keyLabel="U"/>
+        <Key android:codes="1037" android:keyLabel="I"/>
+        <Key android:codes="1043" android:keyLabel="O"/>
+        <Key android:codes="1044" android:keyLabel="P" android:keyEdgeFlags="right"/>
+    </Row>
+    
+    <Row>
+        <Key android:codes="1029" android:keyLabel="A" android:keyEdgeFlags="left"/>
+        <Key android:codes="1047" android:keyLabel="S"/>
+        <Key android:codes="1032" android:keyLabel="D"/>
+        <Key android:codes="1034" android:keyLabel="F"/>
+        <Key android:codes="1035" android:keyLabel="G"/>
+        <Key android:codes="1036" android:keyLabel="H"/>
+        <Key android:codes="1038" android:keyLabel="J"/>
+        <Key android:codes="1039" android:keyLabel="K"/>
+        <Key android:codes="1040" android:keyLabel="L"/>
+        <Key android:codes="1067" android:keyIcon="@drawable/sym_keyboard_delete"  android:keyEdgeFlags="right"/>
+    </Row>
+    
+     <Row>
+        <Key android:codes="-2" android:keyIcon="@drawable/sym_keyboard_shift" android:isModifier="true" android:keyEdgeFlags="left"/>
+        <Key android:codes="1054" android:keyLabel="Z"/>
+        <Key android:codes="1052" android:keyLabel="X"/>
+        <Key android:codes="1031" android:keyLabel="C"/>
+        <Key android:codes="1050" android:keyLabel="V"/>
+        <Key android:codes="1030" android:keyLabel="B"/>
+        <Key android:codes="1042" android:keyLabel="N"/>
+        <Key android:codes="1041" android:keyLabel="M"/>
+        <Key android:codes="1066" android:keyLabel="RET" android:keyWidth="20%p" android:keyEdgeFlags="right"/>
+    </Row>
+
+	<Row>
+        <Key android:codes="2007" android:keyLabel="Esc" android:keyWidth="20%p" android:keyEdgeFlags="left"/>
+        <Key android:codes="2008" android:keyLabel="F1"/>
+        <Key android:codes="2010" android:keyLabel="F3"/>
+        <Key android:codes="2012" android:keyLabel="F5"/>
+        <Key android:codes="2014" android:keyLabel="F7"/>
+        <Key android:codes="1062" android:keyIcon="@drawable/sym_keyboard_space" android:keyWidth="40%p" android:keyEdgeFlags="right"/>
+    </Row>
+
+</Keyboard>
+    

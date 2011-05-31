@@ -1,0 +1,74 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+/* 
+**
+** Copyright 2008, The Android Open Source Project
+**
+** Licensed under the Apache License, Version 2.0 (the "License"); 
+** you may not use this file except in compliance with the License. 
+** You may obtain a copy of the License at 
+**
+**     http://www.apache.org/licenses/LICENSE-2.0 
+**
+** Unless required by applicable law or agreed to in writing, software 
+** distributed under the License is distributed on an "AS IS" BASIS, 
+** WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. 
+** See the License for the specific language governing permissions and 
+** limitations under the License.
+*/
+-->
+
+<Keyboard xmlns:android="http://schemas.android.com/apk/res/android"
+    android:keyWidth="10%p"
+    android:horizontalGap="0px"
+    android:verticalGap="0px"
+    android:keyHeight="@dimen/key_height"
+    >
+    <!-- 
+    <Row>
+        <Key android:codes="20111" android:keyLabel="!" android:keyEdgeFlags="left"/>
+        <Key android:codes="20112" android:keyLabel="\u0022"/>
+        <Key android:codes="20113" android:keyLabel="#"/>
+        <Key android:codes="20114" android:keyLabel="$"/>
+        <Key android:codes="20115" android:keyLabel="%"/>
+        <Key android:codes="20116" android:keyLabel="\u0026"/>
+        <Key android:codes="20117" android:keyLabel="'"/>
+        <Key android:codes="20118" android:keyLabel="("/>
+        <Key android:codes="20119" android:keyLabel=")"/>
+        <Key android:codes="20120" android:keyLabel="\u003F" android:keyEdgeFlags="right"/>
+    </Row>
+    <Row>
+        <Key android:codes="20121" android:keyLabel="\u003C-" android:horizontalGap="10%p" android:keyEdgeFlags="left"/>
+        <Key android:codes="20122" android:keyLabel="+"/>
+        <Key android:codes="20123" android:keyLabel="-"/>
+        <Key android:codes="20124" android:keyLabel="^"/>
+        <Key android:codes="20125" android:keyLabel="\u0040"/>
+        <Key android:codes="20126" android:keyLabel="*"/>
+        <Key android:codes="20128" android:keyLabel="="/>
+        <Key android:codes="20129" android:keyLabel="/" android:keyEdgeFlags="right"/>
+    </Row>
+    -->
+    <Row>
+        <Key android:codes="-2" android:keyIcon="@drawable/sym_keyboard_shift" android:isModifier="true" android:keyEdgeFlags="left"/>
+        <Key android:codes="1017" android:keyLabel="*"/>
+        <Key android:codes="1069" android:keyLabel="-"/>
+        <Key android:codes="1081" android:keyLabel="+"/>
+        <Key android:codes="1055" android:keyLabel=","/>
+        <Key android:codes="1056" android:keyLabel="."/>
+        <Key android:codes="1074" android:keyLabel=";"/>
+   		<Key android:codes="1076" android:keyLabel="/"/>
+        <Key android:codes="10049" android:keyLabel="RET" android:keyWidth="20%p" android:keyEdgeFlags="right"/>
+    </Row>
+     
+  <Row>
+        <Key android:codes="2007" android:keyLabel="Esc" android:keyWidth="20%p" android:keyEdgeFlags="left"/>
+        <Key android:codes="2009" android:keyLabel="F2"/>
+        <Key android:codes="2011" android:keyLabel="F4"/>
+        <Key android:codes="2013" android:keyLabel="F6"/>
+        <Key android:codes="2015" android:keyLabel="F8"/>
+        <Key android:codes="1062" android:keyIcon="@drawable/sym_keyboard_space" android:keyWidth="40%p" android:keyEdgeFlags="right"/>
+    </Row>
+   
+
+</Keyboard>
+    
