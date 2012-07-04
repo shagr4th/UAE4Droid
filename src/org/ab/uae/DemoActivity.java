@@ -293,6 +293,13 @@ protected VirtualKeypad vKeyPad = null;
     		}
     	}
         
+        public void onSharedPreferenceChanged(SharedPreferences prefs, String key) {
+        	if ("useInputMethod".equals(key))
+        	getWindow().setFlags(prefs.getBoolean(key, false) ?
+    				0 : WindowManager.LayoutParams.FLAG_ALT_FOCUSABLE_IM,
+    				WindowManager.LayoutParams.FLAG_ALT_FOCUSABLE_IM);
+        }
+        
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -337,6 +344,7 @@ protected VirtualKeypad vKeyPad = null;
     	saveDir.mkdir();
     	
     	SharedPreferences sp = PreferenceManager.getDefaultSharedPreferences(this);
+    	onSharedPreferenceChanged(sp, "useInputMethod");
     	String rPath = sp.getString(Globals.PREFKEY_ROM, null);
     	String f1P = sp.getString(Globals.PREFKEY_F1, null);
     	String f2P = sp.getString(Globals.PREFKEY_F2, null);

@@ -327,7 +327,7 @@ static __inline__ void uae4all_memclr(void *_GCCRES_ dest, int n)
 	d[0] = d[8] = 0;
 }
 
-#elif defined(GP2X) || defined(GIZMONDO) || defined(ANDROID)
+#elif defined(GP2X) || defined(GIZMONDO) || defined(ANDROID_ARM)
 
 extern "C" {
 	void *arm_memset(void *s, int c, size_t n);

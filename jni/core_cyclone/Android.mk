@@ -32,8 +32,14 @@ LOCAL_CFLAGS     += -DUSE_FAME_CORE -DUSE_CYCLONE_CORE -DUSE_CYCLONE_MEMHANDLERS
 # m68k/m68k_cmn_intrf.cpp  m68k/cyclone/cyclone.S m68k/cyclone/m68k_intrf.cpp m68k/cyclone/memhandlers.S
 # m68k/fame/famec.cpp m68k/fame/m68k_intrf.cpp
 
-LOCAL_SRC_FILES  := audio.cpp autoconf.cpp blitfunc.cpp blittable.cpp blitter.cpp cia.cpp custom.cpp disk.cpp drawing.cpp ersatz.cpp gfxutil.cpp keybuf.cpp main.cpp md-support.cpp memory.cpp missing.cpp od-joy.cpp savedisk.cpp sdlgfx.cpp sound_android.cpp writelog.cpp zfile.cpp gui.cpp vkbd/vkbd.cpp memcpy.S memset.S
-LOCAL_SRC_FILES  += m68k/cyclone/m68k_intrf.cpp m68k/m68k_cmn_intrf.cpp  m68k/cyclone/cyclone.S m68k/cyclone/memhandlers.S
+LOCAL_SRC_FILES  := audio.cpp autoconf.cpp blitfunc.cpp blittable.cpp blitter.cpp cia.cpp custom.cpp disk.cpp drawing.cpp ersatz.cpp gfxutil.cpp keybuf.cpp main.cpp md-support.cpp memory.cpp missing.cpp od-joy.cpp savedisk.cpp sdlgfx.cpp sound_android.cpp writelog.cpp zfile.cpp gui.cpp vkbd/vkbd.cpp
+ifeq ($(TARGET_ARCH),arm)
+LOCAL_SRC_FILES += memcpy.S memset.S
+endif
+LOCAL_SRC_FILES  += m68k/cyclone/m68k_intrf.cpp m68k/m68k_cmn_intrf.cpp  
+ifeq ($(TARGET_ARCH),arm)
+LOCAL_SRC_FILES += m68k/cyclone/cyclone.S m68k/cyclone/memhandlers.S
+endif
 #LOCAL_SRC_FILES  += m68k/uae/newcpu.cpp m68k/uae/readcpu.cpp m68k/uae/cpudefs.cpp m68k/uae/fpp.cpp m68k/uae/cpustbl.cpp m68k/uae/cpuemu.cpp
 
 LOCAL_ARM_MODE := arm

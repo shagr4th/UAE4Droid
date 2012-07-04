@@ -11,8 +11,13 @@ endif
 LOCAL_CFLAGS := -I$(LOCAL_PATH)/include \
 	-DSDL_JAVA_PACKAGE_PATH=$(SDL_JAVA_PACKAGE_PATH) \
 	-DSDL_CURDIR_PATH=\"$(SDL_CURDIR_PATH)\" \
-	-DSDL_TRACKBALL_KEYUP_DELAY=$(SDL_TRACKBALL_KEYUP_DELAY) \
-	-DNO_MALLINFO
+	-DSDL_TRACKBALL_KEYUP_DELAY=$(SDL_TRACKBALL_KEYUP_DELAY)
+	
+LOCAL_CFLAGS += -DNO_MALLINFO
+
+ifeq ($(TARGET_ARCH),x86)
+LOCAL_CFLAGS += -DLACKS_FCNTL_H -DLACKS_UNISTD_H
+endif
 
 SDL_SRCS := \
 	src/*.c \
@@ -36,7 +41,9 @@ SDL_SRCS := \
 
 LOCAL_CPP_EXTENSION := .cpp
 
+ifeq ($(TARGET_ARCH),arm)
 LOCAL_ARM_MODE := arm
+endif
 
 
 # Note this simple makefile var substitution, you can find even simpler examples in different Android projects

@@ -9,6 +9,7 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.SharedPreferences.Editor;
+import android.os.Build;
 import android.os.Bundle;
 import android.preference.CheckBoxPreference;
 import android.preference.ListPreference;
@@ -199,6 +200,7 @@ public class Settings extends PreferenceActivity {
 	        toggleCyclonePref.setTitle(R.string.cyclone_core);
 	        toggleCyclonePref.setSummary(R.string.cyclone_desc);
 	        toggleCyclonePref.setDefaultValue(false);
+	        toggleCyclonePref.setEnabled(Build.CPU_ABI.toLowerCase().startsWith("arm"));
 	        perfPrefCat.addPreference(toggleCyclonePref);
 	        
 	        CheckBoxPreference toggleSoundPref = new CheckBoxPreference(this);
@@ -284,6 +286,13 @@ public class Settings extends PreferenceActivity {
 	        screenSizePref.setKey("scale");
 	        screenSizePref.setTitle(R.string.screen_size_text);
 	        portPrefCat.addPreference(screenSizePref);
+	        
+	        CheckBoxPreference toggleInputMethodPref = new CheckBoxPreference(this);
+	        toggleInputMethodPref.setKey("useInputMethod");
+	        toggleInputMethodPref.setTitle(R.string.useInputMethodTitle);
+	        toggleInputMethodPref.setDefaultValue(false);
+	        toggleInputMethodPref.setSummary(R.string.useInputMethod);
+	        portPrefCat.addPreference(toggleInputMethodPref);
 	        
 	        PreferenceScreen screenPref = getPreferenceManager().createPreferenceScreen(this);
 	        screenPref.setKey("screen_preference");

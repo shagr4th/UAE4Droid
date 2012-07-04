@@ -7,6 +7,7 @@
     
     <org.ab.uae.MainSurfaceView
       android:id="@+id/mainview"
+      android:keepScreenOn="true"
       android:layout_width="fill_parent"
       android:layout_height="fill_parent"/>
       
