@@ -391,6 +391,9 @@ protected VirtualKeypad vKeyPad = null;
         		tv.append("ROM invalid\n");
         }
         
+        boolean twoPlayers = sp.getBoolean("twoPlayers", false);
+        MainSurfaceView.setNumJoysticks(twoPlayers?2:1);
+        
         if (romOk) {
         	if (romChange) {
         		 showDialog(2); 

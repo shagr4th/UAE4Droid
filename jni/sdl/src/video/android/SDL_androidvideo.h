@@ -33,6 +33,7 @@ extern void ANDROID_InitOSKeymap(_THIS);
 extern void ANDROID_PumpEvents(_THIS);
 
 extern int pop_circular_queue();
+extern int android_numJoysticks;
 
 // Keycodes ripped from Java SDK
 enum KEYCODES_ANDROID 

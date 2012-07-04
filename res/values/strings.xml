@@ -66,4 +66,6 @@
 <string name="change_disk">Change Disk</string>
 <string name="useInputMethod">Allow alternate input methods (Bluetooth)</string>
 <string name="useInputMethodTitle">Alternate Input Method</string>
+<string name="twoPlayers">Careful, only working with 2 bluetooth controllers (need restart !)</string>
+<string name="twoPlayersTitle">Enable 2 joysticks</string>
 </resources>

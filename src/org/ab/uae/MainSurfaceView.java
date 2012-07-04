@@ -180,6 +180,7 @@ public class MainSurfaceView  extends SurfaceView implements SurfaceHolder.Callb
 
     public static native void nativeMouse( int x, int y, int action, int relative );
     public static native void nativeKey( int keyCode, int down, int joystick, int joystick_nr );
+    public static native void setNumJoysticks(int numJoysticks);
   
 	public void shiftImage(int leftDPIs) {
 		if (leftDPIs > 0) {

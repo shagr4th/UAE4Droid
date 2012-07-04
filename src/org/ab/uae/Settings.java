@@ -294,6 +294,13 @@ public class Settings extends PreferenceActivity {
 	        toggleInputMethodPref.setSummary(R.string.useInputMethod);
 	        portPrefCat.addPreference(toggleInputMethodPref);
 	        
+	        CheckBoxPreference twoPlayers = new CheckBoxPreference(this);
+	        twoPlayers.setKey("twoPlayers");
+	        twoPlayers.setTitle(R.string.twoPlayersTitle);
+	        twoPlayers.setDefaultValue(false);
+	        twoPlayers.setSummary(R.string.twoPlayers);
+	        portPrefCat.addPreference(twoPlayers);
+	        
 	        PreferenceScreen screenPref = getPreferenceManager().createPreferenceScreen(this);
 	        screenPref.setKey("screen_preference");
 	        screenPref.setTitle(R.string.custom_mappings);

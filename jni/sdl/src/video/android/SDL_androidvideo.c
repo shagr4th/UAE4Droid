@@ -87,6 +87,7 @@ struct SDL_PrivateVideoData {
 
 #define SDL_modelist		(this->hidden->SDL_modelist)
 
+int android_numJoysticks;
 
 static int sWindowWidth  = 320;
 static int sWindowHeight = 480;
@@ -671,6 +672,12 @@ int pop_circular_queue_for_joystick2() {
 	if(read_index2 == (tos2+SIZE)) // circular
 		read_index2 = tos2;
 	return *read_index2;
+}
+
+void
+JAVA_EXPORT_NAME(MainSurfaceView_setNumJoysticks) ( JNIEnv*  env, jobject  thiz, jint numJoysticks )
+{
+	android_numJoysticks = numJoysticks;
 }
 
 void

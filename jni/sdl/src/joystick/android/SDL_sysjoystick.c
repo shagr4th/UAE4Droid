@@ -38,9 +38,9 @@
  */
 int SDL_SYS_JoystickInit(void)
 {
-	SDL_numjoysticks = 2;
+	SDL_numjoysticks = android_numJoysticks==0?1:android_numJoysticks;
     //keysInit();
-	__android_log_print(ANDROID_LOG_INFO, "libSDL", "init2");
+	__android_log_print(ANDROID_LOG_INFO, "libSDL", "SDL_SYS_JoystickInit %i", SDL_numjoysticks);
 	return SDL_numjoysticks;
 }
 
