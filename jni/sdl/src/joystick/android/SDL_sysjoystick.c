@@ -125,16 +125,19 @@ void SDL_SYS_JoystickUpdate(SDL_Joystick *joystick)
 
 		//__android_log_print(ANDROID_LOG_INFO, "libSDL", "keysd: %d / keysu: %d", keysd, keysu);
 	
+		// up = 46 down = 31 left = 32 right = 34
+		// UpLeft = 33 UpRight = 48 DownLeft = 52 DownRight = 50
+
 	short ax=0,v=0,h=0;
 	if((keysd==46 ||keysd==33 ||keysd==48)) {ax=1;v=-10;SDL_PrivateJoystickAxis(joystick,ax,v);}//fprintf(stderr,"KEY_UP\n");}
 	if((keysd==31 ||keysd==50 ||keysd==52)) {ax=1;v=10;SDL_PrivateJoystickAxis(joystick,ax,v);}//fprintf(stderr,"KEY_DOWN\n");}
-	if((keysd==32 ||keysd==33 ||keysd==50)) {ax=0;h=-10;SDL_PrivateJoystickAxis(joystick,ax,h);}//fprintf(stderr,"KEY_LEFT\n");}
-	if((keysd==34 ||keysd==48 ||keysd==52)) {ax=0;h=10;SDL_PrivateJoystickAxis(joystick,ax,h);}//fprintf(stderr,"KEY_RIGHT\n");}
+	if((keysd==32 ||keysd==33 ||keysd==52)) {ax=0;h=-10;SDL_PrivateJoystickAxis(joystick,ax,h);}//fprintf(stderr,"KEY_LEFT\n");}
+	if((keysd==34 ||keysd==48 ||keysd==50)) {ax=0;h=10;SDL_PrivateJoystickAxis(joystick,ax,h);}//fprintf(stderr,"KEY_RIGHT\n");}
 
 	if((keysu==46 ||keysu==33 ||keysu==48)) {ax=1;v=0;SDL_PrivateJoystickAxis(joystick,ax,v);}//fprintf(stderr,"KEY_UP\n");}
 	if((keysu==31 ||keysu==50 ||keysu==52)) {ax=1;v=0;SDL_PrivateJoystickAxis(joystick,ax,v);}//fprintf(stderr,"KEY_DOWN\n");}
-	if((keysu==32 ||keysu==33 ||keysu==50)) {ax=0;h=0;SDL_PrivateJoystickAxis(joystick,ax,h);}//fprintf(stderr,"KEY_LEFT\n");}
-	if((keysu==34 ||keysu==48 ||keysu==52)) {ax=0;h=0;SDL_PrivateJoystickAxis(joystick,ax,h);}//fprintf(stderr,"KEY_RIGHT\n");}
+	if((keysu==32 ||keysu==33 ||keysu==52)) {ax=0;h=0;SDL_PrivateJoystickAxis(joystick,ax,h);}//fprintf(stderr,"KEY_LEFT\n");}
+	if((keysu==34 ||keysu==48 ||keysu==50)) {ax=0;h=0;SDL_PrivateJoystickAxis(joystick,ax,h);}//fprintf(stderr,"KEY_RIGHT\n");}
 
 	if((keysd==44))		{SDL_PrivateJoystickButton(joystick,0,SDL_PRESSED);prevbutton=44;}
 	
