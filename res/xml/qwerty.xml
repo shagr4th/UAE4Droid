@@ -74,7 +74,7 @@
         <Key android:codes="1030" android:keyLabel="B"/>
         <Key android:codes="1042" android:keyLabel="N"/>
         <Key android:codes="1041" android:keyLabel="M"/>
-        <Key android:codes="1066" android:keyLabel="RET" android:keyWidth="20%p" android:keyEdgeFlags="right"/>
+        <Key android:codes="1101" android:keyLabel="RET" android:keyWidth="20%p" android:keyEdgeFlags="right"/>
     </Row>
 
 	<Row>

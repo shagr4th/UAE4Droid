@@ -417,14 +417,14 @@ protected VirtualKeypad vKeyPad = null;
     	KeyEvent.KEYCODE_L, KeyEvent.KEYCODE_R, KeyEvent.KEYCODE_C, KeyEvent.KEYCODE_D,
     	KeyEvent.KEYCODE_F, KeyEvent.KEYCODE_E, KeyEvent.KEYCODE_T, KeyEvent.KEYCODE_X, KeyEvent.KEYCODE_V,
     	KeyEvent.KEYCODE_0, KeyEvent.KEYCODE_1, KeyEvent.KEYCODE_2, KeyEvent.KEYCODE_3, KeyEvent.KEYCODE_4,
-    	KeyEvent.KEYCODE_5, KeyEvent.KEYCODE_6, KeyEvent.KEYCODE_7, KeyEvent.KEYCODE_8,
+    	KeyEvent.KEYCODE_5, KeyEvent.KEYCODE_6, KeyEvent.KEYCODE_7, KeyEvent.KEYCODE_8, KeyEvent.KEYCODE_9,
     	KeyEvent.KEYCODE_A, KeyEvent.KEYCODE_B, KeyEvent.KEYCODE_G, KeyEvent.KEYCODE_H,
     	KeyEvent.KEYCODE_I, KeyEvent.KEYCODE_J, KeyEvent.KEYCODE_K, KeyEvent.KEYCODE_M, KeyEvent.KEYCODE_N};
     public static String default_keycodes_string [] = { "Fire", "Alt.Fire" , "Left Mouse Click",
     	"Right Mouse Click", "Up", "Down", "Left",
     	"Right", "UpLeft", "UpRight", "DownLeft", "DownRight",
     	"Escape", "F1", "F2", "F3", "F4",
-    	"F5", "F6", "F7", "F8", 
+    	"F5", "F6", "F7", "F8", "Space",
     	"Fire2", "Up2", "Down2", "Left2",
     	"Right2", "UpLeft2", "UpRight2", "DownLeft2", "DownRight2"};
     public static int current_keycodes [];

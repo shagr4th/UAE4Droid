@@ -57,7 +57,7 @@
         <Key android:codes="1056" android:keyLabel="."/>
         <Key android:codes="1074" android:keyLabel=";"/>
    		<Key android:codes="1076" android:keyLabel="/"/>
-        <Key android:codes="10049" android:keyLabel="RET" android:keyWidth="20%p" android:keyEdgeFlags="right"/>
+        <Key android:codes="1066" android:keyLabel="ENT" android:keyWidth="20%p" android:keyEdgeFlags="right"/>
     </Row>
      
   <Row>

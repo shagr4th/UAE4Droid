@@ -685,13 +685,18 @@ JAVA_EXPORT_NAME(MainSurfaceView_nativeKey) ( JNIEnv*  env, jobject  thiz, jint 
 {
 	//__android_log_print(ANDROID_LOG_INFO, "libSDL", "key event %i %s", key, action ? "down" : "up");
 	SDL_keysym keysym;
-	if (joystick && ((key >=7 && key < 15) || key == 44 || key == 46 || key == 31 || key == 32 || key == 34 ||key == 33 || key == 48 || key == 52 ||key == 50)) {
+	if (joystick && ((key >=7 && key < 15) || key == 16 || key == 44 || key == 46 || key == 31 || key == 32 || key == 34 ||key == 33 || key == 48 || key == 52 ||key == 50)) {
 		// joystick
 		if (key == 7)
 		{
 			// escape
 
 			SDL_PrivateKeyboard( action ? SDL_PRESSED : SDL_RELEASED, TranslateKey(KEYCODE_ESCAPE, &keysym) );
+		} else if (key == 16)
+		{
+			// escape
+
+			SDL_PrivateKeyboard( action ? SDL_PRESSED : SDL_RELEASED, TranslateKey(KEYCODE_SPACE, &keysym) );
 		} else if (key >7 && key < 15)
 		{
 			// F1-F8
@@ -814,6 +819,7 @@ void ANDROID_InitOSKeymap(_THIS)
   keymap[KEYCODE_F6] = SDLK_F6;
   keymap[KEYCODE_F7] = SDLK_F7;
   keymap[KEYCODE_F8] = SDLK_F8;
+  keymap[KEYCODE_RETURN] = SDLK_RETURN;
   keymap[KEYCODE_ESCAPE] = SDLK_ESCAPE;
 
   /*

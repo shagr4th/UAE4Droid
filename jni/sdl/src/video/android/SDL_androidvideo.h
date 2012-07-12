@@ -139,9 +139,9 @@ KEYCODE_F5				= 97,
 KEYCODE_F6				= 98,
 KEYCODE_F7				= 99,
 KEYCODE_F8				= 100,
+KEYCODE_RETURN          = 101,
 
-
-KEYCODE_LAST            = KEYCODE_F8
+KEYCODE_LAST            = KEYCODE_RETURN
 };
 
 #endif /* _SDL_androidvideo_h */

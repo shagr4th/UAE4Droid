@@ -3,9 +3,6 @@ package org.ab.uae;
 import org.ab.nativelayer.ImportView;
 import org.ab.nativelayer.KeyPreference;
 
-import android.app.AlertDialog;
-import android.app.Dialog;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.SharedPreferences.Editor;
