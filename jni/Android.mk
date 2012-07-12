@@ -19,6 +19,6 @@ ifeq ($(TARGET_ARCH),arm)
 include $(call all-subdir-makefiles)
 endif
 
-ifeq ($(TARGET_ARCH),x86)
+ifneq ($(TARGET_ARCH),arm)
 include jni/core/Android.mk jni/sdl/Android.mk jni/sdl_mixer/Android.mk jni/tremor/Android.mk
 endif 
