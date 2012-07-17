@@ -286,7 +286,6 @@ public class MainSurfaceView  extends SurfaceView implements SurfaceHolder.Callb
 	 Matrix matrixScreen;
 	 
 	ShortBuffer buffer;
-	protected static Thread nativeThread;
 	ScreenUpdater updater;
 	
 	 PaintFlagsDrawFilter setfil = new PaintFlagsDrawFilter(0, 
@@ -305,9 +304,9 @@ public class MainSurfaceView  extends SurfaceView implements SurfaceHolder.Callb
 	    	 //updater =new ScreenUpdater(this);
 	    	 //updater.start();
 	    	 
-	    	if (nativeThread == null || !nativeThread.isAlive()) {
-	    		nativeThread = new Thread(this);
-	    		nativeThread.start();
+	    	if (DemoActivity.nativeThread == null || !DemoActivity.nativeThread.isAlive()) {
+	    		DemoActivity.nativeThread = new Thread(this);
+	    		DemoActivity.nativeThread.start();
 	    	}
     	}
 	}
