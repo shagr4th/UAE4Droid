@@ -65,6 +65,8 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.content.pm.ActivityInfo;
+import android.content.res.Configuration;
 import android.inputmethodservice.Keyboard;
 import android.inputmethodservice.KeyboardView;
 import android.inputmethodservice.KeyboardView.OnKeyboardActionListener;
@@ -206,7 +208,6 @@ class AudioThread extends Thread {
 	private static native int nativeAudioBufferUnlock();
 }*/
 public class DemoActivity extends Activity implements GameKeyListener {
-private int currentprimaryCode; // no multitouch
 
 protected VirtualKeypad vKeyPad = null;
 	
@@ -218,24 +219,13 @@ protected VirtualKeypad vKeyPad = null;
 
         public void onPress(int primaryCode) {
         	if (mGLView != null) {
-        		if (currentprimaryCode > -1)
-        			mGLView.actionKey(false, currentprimaryCode);
         		mGLView.actionKey(true, primaryCode);
-        		currentprimaryCode = primaryCode;
         	}
         }
 
         public void onRelease(int primaryCode) {
         	if (mGLView != null) {
-        		if (currentprimaryCode > -1 && currentprimaryCode == primaryCode)
-        			mGLView.actionKey(false, primaryCode);
-        		else {
-        			if (currentprimaryCode > -1)
-        				mGLView.actionKey(false, currentprimaryCode);
-        			else
-        				mGLView.actionKey(false, primaryCode);
-        			currentprimaryCode = -1;
-        		}
+        		mGLView.actionKey(false, primaryCode);
         	}
         		
         }
@@ -258,9 +248,9 @@ protected VirtualKeypad vKeyPad = null;
     		if (c == Keyboard.KEYCODE_MODE_CHANGE) {
     			// switch layout
     			if (currentKeyboardLayout == 1)
-    				switchKeyboard(2, true);
+    				switchKeyboard(2, false);
     			else if (currentKeyboardLayout == 2)
-    				switchKeyboard(1, true);
+    				switchKeyboard(1, false);
     		} 
     	}
         
@@ -319,7 +309,8 @@ protected VirtualKeypad vKeyPad = null;
         
     }
     
-    private boolean cyclone;
+    protected static Thread nativeThread;
+	private boolean cyclone;
     private String romPath = null;
     private String f1Path = null;
     private String f2Path = null;
@@ -418,6 +409,7 @@ protected VirtualKeypad vKeyPad = null;
     	KeyEvent.KEYCODE_F, KeyEvent.KEYCODE_E, KeyEvent.KEYCODE_T, KeyEvent.KEYCODE_X, KeyEvent.KEYCODE_V,
     	KeyEvent.KEYCODE_0, KeyEvent.KEYCODE_1, KeyEvent.KEYCODE_2, KeyEvent.KEYCODE_3, KeyEvent.KEYCODE_4,
     	KeyEvent.KEYCODE_5, KeyEvent.KEYCODE_6, KeyEvent.KEYCODE_7, KeyEvent.KEYCODE_8, KeyEvent.KEYCODE_9,
+    	KeyEvent.KEYCODE_Q, KeyEvent.KEYCODE_S, KeyEvent.KEYCODE_U, KeyEvent.KEYCODE_W, KeyEvent.KEYCODE_Y, KeyEvent.KEYCODE_Z,
     	KeyEvent.KEYCODE_A, KeyEvent.KEYCODE_B, KeyEvent.KEYCODE_G, KeyEvent.KEYCODE_H,
     	KeyEvent.KEYCODE_I, KeyEvent.KEYCODE_J, KeyEvent.KEYCODE_K, KeyEvent.KEYCODE_M, KeyEvent.KEYCODE_N};
     public static String default_keycodes_string [] = { "Fire", "Alt.Fire" , "Left Mouse Click",
@@ -425,8 +417,9 @@ protected VirtualKeypad vKeyPad = null;
     	"Right", "UpLeft", "UpRight", "DownLeft", "DownRight",
     	"Escape", "F1", "F2", "F3", "F4",
     	"F5", "F6", "F7", "F8", "Space",
-    	"Fire2", "Up2", "Down2", "Left2",
-    	"Right2", "UpLeft2", "UpRight2", "DownLeft2", "DownRight2"};
+    	"LeftShift", "RightShift", "ArrowUp", "ArrowDown", "ArrowLeft", "ArrowRight",
+    	"Fire Joy2", "Up Joy2", "Down Joy2", "Left Joy2",
+    	"Right Joy2", "UpLeft Joy2", "UpRight Joy2", "DownLeft Joy2", "DownRight Joy2"};
     public static int current_keycodes [];
     
     public int [] getRealKeyCode(int keyCode) {
@@ -498,6 +491,10 @@ protected VirtualKeypad vKeyPad = null;
         theKeyboard.setVisibility(View.INVISIBLE);
         theKeyboard.setPreviewEnabled(false);
         }
+        
+        // touch controls by default if no physical keyboard
+        if (getResources().getConfiguration().keyboard == Configuration.KEYBOARD_NOKEYS)
+        	manageTouch(null);
     }
     
     public void render() {
@@ -668,7 +665,7 @@ protected VirtualKeypad vKeyPad = null;
         		if (joystick == 1) {
         			joystick = 0;
         			item.setTitle(R.string.joystick_mode);
-        			switchKeyboard(1, true);
+        			switchKeyboard(1, false);
         		} else if (joystick == 0) {
         			joystick = 1;
         			item.setTitle(R.string.keyb_mode);
@@ -676,19 +673,7 @@ protected VirtualKeypad vKeyPad = null;
         		}
         		break;
         	case TOUCH_ID:
-        		if (touch) {
-        			touch = false;
-        			item.setTitle(R.string.show_touch);
-        			theKeyboard.setVisibility(View.INVISIBLE);
-        		} else {
-        			touch = true;
-        			item.setTitle(R.string.hide_touch);
-        			if (currentKeyboardLayout != 0)
-        				theKeyboard.setVisibility(View.VISIBLE);
-        		}
-        		if (mGLView != null && vKeyPad == null) {
-    				mGLView.shiftImage(joystick==1&&touch?SHIFT_KEYB:0);
-    			}
+        		manageTouch(item);
         		break;
         	case MOUSE_ID:
         		mouse_button = 1 - mouse_button;
@@ -712,6 +697,24 @@ protected VirtualKeypad vKeyPad = null;
         }
     	}
         return super.onMenuItemSelected(featureId, item);
+    }
+    
+    private void manageTouch(MenuItem item) {
+    	if (touch) {
+			touch = false;
+			if (item != null)
+				item.setTitle(R.string.show_touch);
+			theKeyboard.setVisibility(View.INVISIBLE);
+		} else {
+			touch = true;
+			if (item != null)
+				item.setTitle(R.string.hide_touch);
+			if (currentKeyboardLayout != 0)
+				theKeyboard.setVisibility(View.VISIBLE);
+		}
+		if (mGLView != null && vKeyPad == null) {
+			mGLView.shiftImage(joystick==1&&touch?SHIFT_KEYB:0);
+		}
     }
     
     @Override
