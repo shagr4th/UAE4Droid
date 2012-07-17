@@ -685,7 +685,8 @@ JAVA_EXPORT_NAME(MainSurfaceView_nativeKey) ( JNIEnv*  env, jobject  thiz, jint 
 {
 	//__android_log_print(ANDROID_LOG_INFO, "libSDL", "key event %i %s", key, action ? "down" : "up");
 	SDL_keysym keysym;
-	if (joystick && ((key >=7 && key < 15) || key == 16 || key == 45 || key == 47 || key == 44 || key == 46 || key == 31 || key == 32 || key == 34 ||key == 33 || key == 48 || key == 52 ||key == 50)) {
+	if (key >= 500 && key < 1000) {
+		key = key - 500;
 		// joystick
 		if (key == 7)
 		{
@@ -701,8 +702,24 @@ JAVA_EXPORT_NAME(MainSurfaceView_nativeKey) ( JNIEnv*  env, jobject  thiz, jint 
 			SDL_PrivateKeyboard( action ? SDL_PRESSED : SDL_RELEASED, TranslateKey(KEYCODE_SHIFT_LEFT, &keysym) );
 		} else if (key == 47)
 		{
-			// space
+			// rightshift
 			SDL_PrivateKeyboard( action ? SDL_PRESSED : SDL_RELEASED, TranslateKey(KEYCODE_SHIFT_RIGHT, &keysym) );
+		} else if (key == 49)
+		{
+			// key up
+			SDL_PrivateKeyboard( action ? SDL_PRESSED : SDL_RELEASED, TranslateKey(KEYCODE_DPAD_UP, &keysym) );
+		} else if (key == 51)
+		{
+			// key down
+			SDL_PrivateKeyboard( action ? SDL_PRESSED : SDL_RELEASED, TranslateKey(KEYCODE_DPAD_DOWN, &keysym) );
+		} else if (key == 53)
+		{
+			// key left
+			SDL_PrivateKeyboard( action ? SDL_PRESSED : SDL_RELEASED, TranslateKey(KEYCODE_DPAD_LEFT, &keysym) );
+		} else if (key == 54)
+		{
+			// key right
+			SDL_PrivateKeyboard( action ? SDL_PRESSED : SDL_RELEASED, TranslateKey(KEYCODE_DPAD_RIGHT, &keysym) );
 		} else if (key >7 && key < 15)
 		{
 			// F1-F8

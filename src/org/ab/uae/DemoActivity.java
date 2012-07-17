@@ -75,6 +75,7 @@ import android.media.AudioManager;
 import android.media.AudioTrack;
 import android.opengl.GLSurfaceView;
 import android.os.Bundle;
+import android.os.Environment;
 import android.os.PowerManager;
 import android.preference.PreferenceManager;
 import android.util.Log;
@@ -306,7 +307,9 @@ protected VirtualKeypad vKeyPad = null;
         checkConf();
         checkFiles(false);
         
-        
+     // touch controls by default if no physical keyboard
+        if (getResources().getConfiguration().keyboard == Configuration.KEYBOARD_NOKEYS)
+        	manageTouch(null);
     }
     
     protected static Thread nativeThread;
@@ -331,7 +334,7 @@ protected VirtualKeypad vKeyPad = null;
     
     private void checkFiles(boolean force_reset) {
     	
-    	File saveDir = new File("/sdcard/.uae");
+    	File saveDir = new File(Environment.getExternalStorageDirectory().getPath() + "/.uae");
     	saveDir.mkdir();
     	
     	SharedPreferences sp = PreferenceManager.getDefaultSharedPreferences(this);
@@ -412,6 +415,11 @@ protected VirtualKeypad vKeyPad = null;
     	KeyEvent.KEYCODE_Q, KeyEvent.KEYCODE_S, KeyEvent.KEYCODE_U, KeyEvent.KEYCODE_W, KeyEvent.KEYCODE_Y, KeyEvent.KEYCODE_Z,
     	KeyEvent.KEYCODE_A, KeyEvent.KEYCODE_B, KeyEvent.KEYCODE_G, KeyEvent.KEYCODE_H,
     	KeyEvent.KEYCODE_I, KeyEvent.KEYCODE_J, KeyEvent.KEYCODE_K, KeyEvent.KEYCODE_M, KeyEvent.KEYCODE_N};
+    
+    static {
+        // to differentiate between joystick/special keys mapping and regular keyboard 
+    	for(int i=0;i<default_keycodes.length;i++) default_keycodes[i] += 500;
+    }
     public static String default_keycodes_string [] = { "Fire", "Alt.Fire" , "Left Mouse Click",
     	"Right Mouse Click", "Up", "Down", "Left",
     	"Right", "UpLeft", "UpRight", "DownLeft", "DownRight",
@@ -426,25 +434,23 @@ protected VirtualKeypad vKeyPad = null;
     	int h [] = new int [2];
     	h[0] = keyCode;
     	h[1] = 1;
-    	if (joystick == 1) {
-			for(int i=0;i<current_keycodes.length;i++) {
-				if (keyCode == current_keycodes[i]) {
-					if (default_keycodes[i] == KeyEvent.KEYCODE_DPAD_CENTER) {
-						h[0] = KeyEvent.KEYCODE_P;
-						return h;
-					}
-					if (i > 20) {
-						// joystick 2
-						if (i == 21)
-							h[0] = default_keycodes[0];
-						else
-							h[0] = default_keycodes[i-18];
-						h[1] = 2;
-						return h;
-					} else {
-						h[0] = default_keycodes[i];
-						return h;
-					}
+		for(int i=0;i<current_keycodes.length;i++) {
+			if (keyCode == current_keycodes[i]) {
+				if (default_keycodes[i] == default_keycodes[1]) {
+					h[0] = default_keycodes[0];
+					return h;
+				}
+				if (i > 27) {
+					// joystick 2
+					if (i == 28)
+						h[0] = default_keycodes[0];
+					else
+						h[0] = default_keycodes[i-25];
+					h[1] = 2;
+					return h;
+				} else {
+					h[0] = default_keycodes[i];
+					return h;
 				}
 			}
 		}
@@ -492,9 +498,7 @@ protected VirtualKeypad vKeyPad = null;
         theKeyboard.setPreviewEnabled(false);
         }
         
-        // touch controls by default if no physical keyboard
-        if (getResources().getConfiguration().keyboard == Configuration.KEYBOARD_NOKEYS)
-        	manageTouch(null);
+        
     }
     
     public void render() {
@@ -678,9 +682,9 @@ protected VirtualKeypad vKeyPad = null;
         	case MOUSE_ID:
         		mouse_button = 1 - mouse_button;
         		if (mouse_button == 1)
-        			Toast.makeText(this, R.string.mouse_right, Toast.LENGTH_SHORT);
+        			Toast.makeText(this, R.string.mouse_right, Toast.LENGTH_SHORT).show();
         		else
-        			Toast.makeText(this, R.string.mouse_left, Toast.LENGTH_SHORT);
+        			Toast.makeText(this, R.string.mouse_left, Toast.LENGTH_SHORT).show();
         		setRightMouse(mouse_button);
         		break;
         	case LOAD_ID:
