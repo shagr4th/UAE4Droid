@@ -36,7 +36,7 @@ public class MainSurfaceView  extends SurfaceView implements SurfaceHolder.Callb
     public boolean onTouchEvent(final MotionEvent event) 
     {
     	
-    	if (((DemoActivity) getContext()).vKeyPad != null && ((DemoActivity) getContext()).touch && ((DemoActivity) getContext()).currentKeyboardLayout == 0) {
+    	if (((DemoActivity) getContext()).vKeyPad != null && ((DemoActivity) getContext()).touch && DemoActivity.currentKeyboardLayout == 0) {
 			boolean b = ((DemoActivity) getContext()).vKeyPad.onTouch(event, false);
 			
 			if (b)
@@ -127,8 +127,8 @@ public class MainSurfaceView  extends SurfaceView implements SurfaceHolder.Callb
 			return true;
 		}
 		
-		if (keyCode == KeyEvent.KEYCODE_VOLUME_DOWN || keyCode == KeyEvent.KEYCODE_VOLUME_UP)
-			return false;
+		/*if (keyCode == KeyEvent.KEYCODE_VOLUME_DOWN || keyCode == KeyEvent.KEYCODE_VOLUME_UP)
+			return false;*/
 		
 		nativeKey( keyCode, 1, mParent.joystick, joystick_nr );
          return true;
@@ -341,7 +341,7 @@ public class MainSurfaceView  extends SurfaceView implements SurfaceHolder.Callb
 	 	            	if (aliased)
 	            		 c.setDrawFilter(setfil);
 	 	            	c.drawBitmap(mainScreen, matrixScreen, null);
-	 	            	if (mParent.vKeyPad != null && mParent.touch && mParent.currentKeyboardLayout == 0)
+	 	            	if (mParent.vKeyPad != null && mParent.touch && DemoActivity.currentKeyboardLayout == 0)
 	 	            		mParent.vKeyPad.draw(c);
 	            	 
 	            	}
