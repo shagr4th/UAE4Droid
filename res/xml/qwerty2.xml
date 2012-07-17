@@ -24,38 +24,14 @@
     android:verticalGap="0px"
     android:keyHeight="@dimen/key_height"
     >
-    <!-- 
-    <Row>
-        <Key android:codes="20111" android:keyLabel="!" android:keyEdgeFlags="left"/>
-        <Key android:codes="20112" android:keyLabel="\u0022"/>
-        <Key android:codes="20113" android:keyLabel="#"/>
-        <Key android:codes="20114" android:keyLabel="$"/>
-        <Key android:codes="20115" android:keyLabel="%"/>
-        <Key android:codes="20116" android:keyLabel="\u0026"/>
-        <Key android:codes="20117" android:keyLabel="'"/>
-        <Key android:codes="20118" android:keyLabel="("/>
-        <Key android:codes="20119" android:keyLabel=")"/>
-        <Key android:codes="20120" android:keyLabel="\u003F" android:keyEdgeFlags="right"/>
-    </Row>
-    <Row>
-        <Key android:codes="20121" android:keyLabel="\u003C-" android:horizontalGap="10%p" android:keyEdgeFlags="left"/>
-        <Key android:codes="20122" android:keyLabel="+"/>
-        <Key android:codes="20123" android:keyLabel="-"/>
-        <Key android:codes="20124" android:keyLabel="^"/>
-        <Key android:codes="20125" android:keyLabel="\u0040"/>
-        <Key android:codes="20126" android:keyLabel="*"/>
-        <Key android:codes="20128" android:keyLabel="="/>
-        <Key android:codes="20129" android:keyLabel="/" android:keyEdgeFlags="right"/>
-    </Row>
-    -->
     
     <Row>
-        <Key android:codes="2059" android:keyLabel="LEFT SHIFT" android:keyWidth="30%p" android:keyEdgeFlags="left"/>
+        <Key android:codes="1059" android:keyLabel="LEFT SHIFT" android:keyWidth="30%p" android:keyEdgeFlags="left"/>
         <Key android:codes="1019" android:keyIcon="@drawable/arrow_up"/>
         <Key android:codes="1020" android:keyIcon="@drawable/arrow_down"/>
         <Key android:codes="1021" android:keyIcon="@drawable/arrow_left"/>
         <Key android:codes="1022" android:keyIcon="@drawable/arrow_right"/>
-        <Key android:codes="2060" android:keyLabel="RIGHT SHIFT" android:keyWidth="30%p" android:keyEdgeFlags="right"/>
+        <Key android:codes="1060" android:keyLabel="RIGHT SHIFT" android:keyWidth="30%p" android:keyEdgeFlags="right"/>
     </Row>
     
     <Row>
@@ -71,11 +47,11 @@
     </Row>
      
   <Row>
-        <Key android:codes="2007" android:keyLabel="Esc" android:keyWidth="20%p" android:keyEdgeFlags="left"/>
-        <Key android:codes="2009" android:keyLabel="F2"/>
-        <Key android:codes="2011" android:keyLabel="F4"/>
-        <Key android:codes="2013" android:keyLabel="F6"/>
-        <Key android:codes="2015" android:keyLabel="F8"/>
+        <Key android:codes="1092" android:keyLabel="Esc" android:keyWidth="20%p" android:keyEdgeFlags="left"/>
+        <Key android:codes="1094" android:keyLabel="F2"/>
+        <Key android:codes="1096" android:keyLabel="F4"/>
+        <Key android:codes="1098" android:keyLabel="F6"/>
+        <Key android:codes="1100" android:keyLabel="F8"/>
         <Key android:codes="1062" android:keyIcon="@drawable/sym_keyboard_space" android:keyWidth="40%p" android:keyEdgeFlags="right"/>
     </Row>
    

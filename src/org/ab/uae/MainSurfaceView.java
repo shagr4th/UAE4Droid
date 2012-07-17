@@ -98,13 +98,9 @@ public class MainSurfaceView  extends SurfaceView implements SurfaceHolder.Callb
 		
 		int joystick_nr = 1;
 		
-		if (keyCode >= 2000) {
-			nativeKey( keyCode-2000, 1, 1, joystick_nr );
-			try { Thread.sleep(50); } catch (InterruptedException e) {}
-			return true;
-		} else if (keyCode >= 1000) {
+		if (keyCode >= 1000) {
 			nativeKey( keyCode-1000, 1, 0, joystick_nr );
-			try { Thread.sleep(50); } catch (InterruptedException e) {}
+			//try { Thread.sleep(50); } catch (InterruptedException e) {}
 			return true;
 		}
 		
@@ -127,8 +123,8 @@ public class MainSurfaceView  extends SurfaceView implements SurfaceHolder.Callb
 			return true;
 		}
 		
-		/*if (keyCode == KeyEvent.KEYCODE_VOLUME_DOWN || keyCode == KeyEvent.KEYCODE_VOLUME_UP)
-			return false;*/
+		if (keyCode == KeyEvent.KEYCODE_VOLUME_DOWN || keyCode == KeyEvent.KEYCODE_VOLUME_UP)
+			return false;
 		
 		nativeKey( keyCode, 1, mParent.joystick, joystick_nr );
          return true;
@@ -142,11 +138,11 @@ public class MainSurfaceView  extends SurfaceView implements SurfaceHolder.Callb
 		
 		if (keyCode >= 2000) {
 			nativeKey( keyCode-2000, 0, 1, joystick_nr );
-			try { Thread.sleep(50); } catch (InterruptedException e) {}
+			//try { Thread.sleep(50); } catch (InterruptedException e) {}
 			return true;
 		} else if (keyCode >= 1000) {
 			nativeKey( keyCode-1000, 0, 0, joystick_nr );
-			try { Thread.sleep(50); } catch (InterruptedException e) {}
+			//try { Thread.sleep(50); } catch (InterruptedException e) {}
 			return true;
 		}
 		
