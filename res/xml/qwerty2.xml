@@ -48,6 +48,16 @@
         <Key android:codes="20129" android:keyLabel="/" android:keyEdgeFlags="right"/>
     </Row>
     -->
+    
+    <Row>
+        <Key android:codes="2059" android:keyLabel="LEFT SHIFT" android:keyWidth="30%p" android:keyEdgeFlags="left"/>
+        <Key android:codes="1019" android:keyIcon="@drawable/arrow_up"/>
+        <Key android:codes="1020" android:keyIcon="@drawable/arrow_down"/>
+        <Key android:codes="1021" android:keyIcon="@drawable/arrow_left"/>
+        <Key android:codes="1022" android:keyIcon="@drawable/arrow_right"/>
+        <Key android:codes="2060" android:keyLabel="RIGHT SHIFT" android:keyWidth="30%p" android:keyEdgeFlags="right"/>
+    </Row>
+    
     <Row>
         <Key android:codes="-2" android:keyIcon="@drawable/sym_keyboard_shift" android:isModifier="true" android:keyEdgeFlags="left"/>
         <Key android:codes="1017" android:keyLabel="*"/>
