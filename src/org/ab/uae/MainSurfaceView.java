@@ -226,9 +226,6 @@ public class MainSurfaceView  extends SurfaceView implements SurfaceHolder.Callb
 		}
 		
 		initMatrix();
-    	
-		if (updater != null)
-			updater.start();
 		
 		Log.i("UAE", "new onSurfaceChanged: " + scaleX + "-" + scaleY + "-" + pixels);
 		
@@ -282,7 +279,6 @@ public class MainSurfaceView  extends SurfaceView implements SurfaceHolder.Callb
 	 Matrix matrixScreen;
 	 
 	ShortBuffer buffer;
-	ScreenUpdater updater;
 	
 	 PaintFlagsDrawFilter setfil = new PaintFlagsDrawFilter(0, 
 			 Paint.FILTER_BITMAP_FLAG); 
@@ -325,38 +321,34 @@ public class MainSurfaceView  extends SurfaceView implements SurfaceHolder.Callb
 	public void requestRender() {
 		
         //checkFPS();
-		if (updater != null)
-			updater.render();
-		else {
-			Canvas c = null;
-	        try {
-	            c = mSurfaceHolder.lockCanvas(null);
-	            synchronized (mSurfaceHolder) {
-	            	 mainScreen.copyPixelsFromBuffer(buffer);
-	            	 if (c != null && matrixScreen != null) {
-	 	            	if (aliased)
-	            		 c.setDrawFilter(setfil);
-	 	            	c.drawBitmap(mainScreen, matrixScreen, null);
-	 	            	if (mParent.vKeyPad != null && mParent.touch && DemoActivity.currentKeyboardLayout == 0)
-	 	            		mParent.vKeyPad.draw(c);
-	            	 
-	            	}
-	            	 
-	            }
-	        } finally {
-	            // do this in a finally so that if an exception is thrown
-	            // during the above, we don't leave the Surface in an
-	            // inconsistent state
-	            if (c != null) {
-	                mSurfaceHolder.unlockCanvasAndPost(c);
-	            }
-	        }
-		}
+		Canvas c = null;
+        try {
+            c = mSurfaceHolder.lockCanvas(null);
+            synchronized (mSurfaceHolder) {
+            	 mainScreen.copyPixelsFromBuffer(buffer);
+            	 if (c != null && matrixScreen != null) {
+ 	            	if (aliased)
+            		 c.setDrawFilter(setfil);
+ 	            	c.drawBitmap(mainScreen, matrixScreen, null);
+ 	            	if (mParent.vKeyPad != null && mParent.touch && DemoActivity.currentKeyboardLayout == 0)
+ 	            		mParent.vKeyPad.draw(c);
+            	 
+            	}
+            	 
+            }
+        } finally {
+            // do this in a finally so that if an exception is thrown
+            // during the above, we don't leave the Surface in an
+            // inconsistent state
+            if (c != null) {
+                mSurfaceHolder.unlockCanvasAndPost(c);
+            }
+        }
+		
 	}
 
 	public void surfaceDestroyed(SurfaceHolder holder) {
-		if (updater != null)
-			updater.stop();
+		
 	}
 	
 	public void onPause() {

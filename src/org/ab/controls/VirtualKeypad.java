@@ -290,17 +290,17 @@ public class VirtualKeypad {
 			return bitmap.getHeight();
 		}
 
-		final boolean isEnabled() {
+		/*final boolean isEnabled() {
 			return !disabled;
-		}
+		}*/
 
 		final void hide(boolean b) {
 			hidden = b;
 		}
 
-		final void disable(boolean b) {
+		/*final void disable(boolean b) {
 			disabled = b;
-		}
+		}*/
 
 		final boolean hitTest(float x, float y) {
 			return bounds.contains(x, y);
@@ -317,12 +317,12 @@ public class VirtualKeypad {
 					(int) (sy * bitmap.getHeight()), true);
 		}
 
-		final void reload(Resources res, int id) {
+		/*final void reload(Resources res, int id) {
 			int w = bitmap.getWidth();
 			int h = bitmap.getHeight();
 			bitmap = ((BitmapDrawable) res.getDrawable(id)).getBitmap();
 			bitmap = Bitmap.createScaledBitmap(bitmap, w, h, true);
-		}
+		}*/
 
 		final void draw(Canvas canvas, Paint paint) {
 			if (!hidden && !disabled && bitmap != null)

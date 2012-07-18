@@ -42,30 +42,16 @@
 package org.ab.uae;
 
 import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.OutputStream;
-import java.nio.ByteBuffer;
-import java.util.zip.ZipEntry;
-import java.util.zip.ZipInputStream;
 
 import org.ab.controls.GameKeyListener;
 import org.ab.controls.VirtualKeypad;
-import org.apache.http.HttpResponse;
-import org.apache.http.client.methods.HttpGet;
-import org.apache.http.impl.client.DefaultHttpClient;
 
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.Dialog;
-import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
-import android.content.pm.ActivityInfo;
 import android.content.res.Configuration;
 import android.inputmethodservice.Keyboard;
 import android.inputmethodservice.KeyboardView;
@@ -73,16 +59,13 @@ import android.inputmethodservice.KeyboardView.OnKeyboardActionListener;
 import android.media.AudioFormat;
 import android.media.AudioManager;
 import android.media.AudioTrack;
-import android.opengl.GLSurfaceView;
 import android.os.Bundle;
 import android.os.Environment;
-import android.os.PowerManager;
 import android.preference.PreferenceManager;
 import android.util.Log;
 import android.view.KeyEvent;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.view.MotionEvent;
 import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
@@ -130,84 +113,6 @@ class Globals {
 	public static String PREFKEY_START = "start";
 }
 
-/*
-class AudioThread extends Thread {
-
-	private Activity mParent;
-	private AudioTrack mAudio;
-	private byte[] mAudioBuffer;
-	private ByteBuffer mAudioBufferNative;
-
-	public AudioThread(Activity parent)
-	{
-		mParent = parent;
-		mAudio = null;
-		mAudioBuffer = null;
-		this.setPriority(Thread.MAX_PRIORITY);
-		this.start();
-	}
-	
-	@Override
-	public void run() 
-	{
-		while( !isInterrupted() )
-		{
-			if( mAudio == null )
-			{
-				int[] initParams = nativeAudioInit();
-				if( initParams == null )
-				{
-					try {
-						sleep(200);
-					} catch( java.lang.InterruptedException e ) { };
-				}
-				else
-				{
-					int rate = initParams[0];
-					int channels = initParams[1];
-					channels = ( channels == 1 ) ? AudioFormat.CHANNEL_CONFIGURATION_MONO : 
-													AudioFormat.CHANNEL_CONFIGURATION_STEREO;
-					int encoding = initParams[2];
-					encoding = ( encoding == 1 ) ? AudioFormat.ENCODING_PCM_16BIT :
-													AudioFormat.ENCODING_PCM_8BIT;
-					int bufSize = AudioTrack.getMinBufferSize( rate, channels, encoding );
-					bufSize = bufSize;
-					if( initParams[3] > bufSize )
-						bufSize = initParams[3];
-					mAudioBuffer = new byte[bufSize];
-					nativeAudioInit2(mAudioBuffer);
-					mAudio = new AudioTrack(AudioManager.STREAM_MUSIC, 
-												rate,
-												channels,
-												encoding,
-												bufSize,
-												AudioTrack.MODE_STREAM );
-					mAudio.play();
-				}
-			}
-			else
-			{
-				int len = nativeAudioBufferLock();
-				if( len > 0 )
-					mAudio.write( mAudioBuffer, 0, len );
-				if( len < 0 )
-					break;
-				nativeAudioBufferUnlock();
-			}
-		}
-		if( mAudio != null )
-		{
-			mAudio.stop();
-			mAudio.release();
-			mAudio = null;
-		}
-	}
-	
-	private static native int[] nativeAudioInit();
-	private static native int nativeAudioInit2(byte[] buf);
-	private static native int nativeAudioBufferLock();
-	private static native int nativeAudioBufferUnlock();
-}*/
 public class DemoActivity extends Activity implements GameKeyListener {
 
 protected VirtualKeypad vKeyPad = null;
@@ -537,26 +442,8 @@ protected VirtualKeypad vKeyPad = null;
         finish();
     }
 
-	/*@Override
-	public boolean onKeyDown(int keyCode, final KeyEvent event) {
-		// Overrides Back key to use in our app
-         if( mGLView != null )
-             mGLView.onKeyDown(keyCode, event );
-        return true;
-     }
-	
-	@Override
-	public boolean onKeyUp(int keyCode, final KeyEvent event) {
-         if( mGLView != null )
-             mGLView.onKeyUp( keyCode,event );
-         return true;
-     }
-*/
     private MainSurfaceView mGLView = null;
    
-   // private AudioThread mAudioThread = null;
-   // private PowerManager.WakeLock wakeLock = null;
-    private DataDownloader downloader = null;
     
     static final private int CONFIGURE_ID = Menu.FIRST +1;
     static final private int INPUT_ID = Menu.FIRST +2;
@@ -566,18 +453,6 @@ protected VirtualKeypad vKeyPad = null;
     static final private int SAVE_ID = Menu.FIRST +6;
     static final private int MOUSE_ID = Menu.FIRST +7;
     static final private int QUIT_ID = Menu.FIRST +8;
-    
-    private SoundThread soundThread;
-    
-    public ByteBuffer initSound(int freq, int bits, int block_buffer_len, int nb_blocks) {
-    	soundThread = new SoundThread(freq, bits, block_buffer_len, nb_blocks);
-    	return soundThread.play();
-    }
-    
-    public void playSound() {
-    	if (soundThread != null)
-    		soundThread.send();
-    }
     
     private AudioTrack audio;
     private boolean play;
@@ -733,210 +608,6 @@ protected VirtualKeypad vKeyPad = null;
 		super.onOptionsMenuClosed(menu);
 	}
     
-class DataDownloader extends Thread
-{
-	class StatusWriter
-	{
-		private TextView Status;
-		private DemoActivity Parent;
-
-		public StatusWriter( TextView _Status, DemoActivity _Parent )
-		{
-			Status = _Status;
-			Parent = _Parent;
-		}
-		
-		public void setText(final String str)
-		{
-			class Callback implements Runnable
-			{
-        		public TextView Status;
-	        	public String text;
-	        	public void run()
-    	    	{
-        			Status.setText(text);
-        		}
-	        }
-    	    Callback cb = new Callback();
-    	    cb.text = new String(str);
-    	    cb.Status = Status;
-			Parent.runOnUiThread(cb);
-		}
-		
-	}
-	public DataDownloader( DemoActivity _Parent, TextView _Status )
-	{
-		Parent = _Parent;
-		DownloadComplete = false;
-		Status = new StatusWriter( _Status, _Parent );
-		Status.setText( "Connecting to " + Globals.DataDownloadUrl );
-		this.start();
-	}
-
-	@Override
-	public void run() 
-	{
-	
-		String path = getOutFilePath("DownloadFinished.flag");
-		InputStream checkFile = null;
-		try {
-			checkFile = new FileInputStream( "/sdcard" );
-		} catch( FileNotFoundException e ) {
-		} catch( SecurityException e ) { };
-		if( checkFile != null )
-		{
-			Status.setText( "No need to download" );
-			DownloadComplete = true;
-			initParent();
-			return;
-		}
-		checkFile = null;
-		
-		// Create output directory
-		if( Globals.DownloadToSdcard )
-		{
-			try {
-				(new File( "/sdcard/" + Globals.ApplicationName )).mkdirs();
-			} catch( SecurityException e ) { };
-		}
-		else
-		{
-			try {
-				FileOutputStream dummy = Parent.openFileOutput( "dummy", Parent.MODE_WORLD_READABLE );
-				dummy.write(0);
-				dummy.flush();
-			} catch( FileNotFoundException e ) {
-			} catch( java.io.IOException e ) {};
-		}
-		
-		HttpGet request = new HttpGet(Globals.DataDownloadUrl);
-		request.addHeader("Accept", "*/*");
-		HttpResponse response = null;
-		try {
-			DefaultHttpClient client = new DefaultHttpClient();
-			client.getParams().setBooleanParameter("http.protocol.handle-redirects", true);
-			response = client.execute(request);
-		} catch (IOException e) { } ;
-		if( response == null )
-		{
-			Status.setText( "Error connecting to " + Globals.DataDownloadUrl );
-			return;
-		}
-
-		Status.setText( "Downloading data from " + Globals.DataDownloadUrl );
-		
-		ZipInputStream zip = null;
-		try {
-			zip = new ZipInputStream(response.getEntity().getContent());
-		} catch( java.io.IOException e ) {
-			Status.setText( "Error downloading data from " + Globals.DataDownloadUrl );
-			return;
-		}
-		
-		byte[] buf = new byte[1024];
-		
-		ZipEntry entry = null;
-
-		while(true)
-		{
-			entry = null;
-			try {
-				entry = zip.getNextEntry();
-			} catch( java.io.IOException e ) {
-				Status.setText( "Error downloading data from " + Globals.DataDownloadUrl );
-				return;
-			}
-			if( entry == null )
-				break;
-			if( entry.isDirectory() )
-			{
-				try {
-					(new File( getOutFilePath(entry.getName()) )).mkdirs();
-				} catch( SecurityException e ) { };
-				continue;
-			}
-			
-			OutputStream out = null;
-			path = getOutFilePath(entry.getName());
-			
-			try {
-				out = new FileOutputStream( path );
-			} catch( FileNotFoundException e ) {
-			} catch( SecurityException e ) { };
-			if( out == null )
-			{
-				Status.setText( "Error writing to " + path );
-				return;
-			}
-
-			Status.setText( "Writing file " + path );
-
-			try {
-				int len;
-				while ((len = zip.read(buf)) > 0)
-				{
-					out.write(buf, 0, len);
-				}
-				out.flush();
-			} catch( java.io.IOException e ) {
-				Status.setText( "Error writing file " + path );
-				return;
-			}
-
-		}
-
-		OutputStream out = null;
-		path = getOutFilePath("DownloadFinished.flag");
-		try {
-			out = new FileOutputStream( path );
-			out.write(0);
-			out.flush();
-		} catch( FileNotFoundException e ) {
-		} catch( SecurityException e ) {
-		} catch( java.io.IOException e ) {
-			Status.setText( "Error writing file " + path );
-			return;
-		};
-		
-		if( out == null )
-		{
-			Status.setText( "Error writing to " + path );
-			return;
-		}
-	
-		Status.setText( "Finished" );
-		DownloadComplete = true;
-		
-		initParent();
-	};
-	
-	private void initParent()
-	{
-		class Callback implements Runnable
-		{
-       		public DemoActivity Parent;
-        	public void run()
-   	    	{
-    	    		Parent.initSDL();
-       		}
-        }
-   	    Callback cb = new Callback();
-        cb.Parent = Parent;
-		Parent.runOnUiThread(cb);
-	}
-	
-	private String getOutFilePath(final String filename)
-	{
-		if( Globals.DownloadToSdcard )
-			return  "/sdcard/" + Globals.ApplicationName + "/" + filename;
-		return Parent.getFilesDir().getAbsolutePath() + "/" + filename;
-	};
-	
-	public boolean DownloadComplete;
-	public StatusWriter Status;
-	private DemoActivity Parent;
-}
-
 private int currentKeyStates = 0;
 
 
