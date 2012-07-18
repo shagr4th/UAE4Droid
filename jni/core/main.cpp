@@ -260,10 +260,10 @@ JAVA_EXPORT_NAME(DemoActivity_setPrefs) ( JNIEnv*  env, jobject  thiz, jstring r
 extern "C" void
 JAVA_EXPORT_NAME(DemoActivity_saveState) ( JNIEnv*  env, jobject  thiz,  jstring filename, jint num) {
 
-	savestate_state = STATE_DOSAVE;
 	const char *srom = (env)->GetStringUTFChars(filename, 0);
 	strcpy(savestate_filename, srom);
-
+	savestate_state = STATE_DOSAVE;
+	
 	switch(num)
 	{
 		case 1:
@@ -296,10 +296,10 @@ JAVA_EXPORT_NAME(DemoActivity_loadState) ( JNIEnv*  env, jobject  thiz,  jstring
 
 	//
 
-	savestate_state = STATE_DORESTORE;
 	const char *srom = (env)->GetStringUTFChars(filename, 0);
 	strcpy(savestate_filename, srom);
-
+	savestate_state = STATE_DORESTORE;
+	
 	switch(num)
 	{
 		case 1:
