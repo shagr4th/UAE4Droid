@@ -72,18 +72,8 @@ import android.view.WindowManager;
 import android.widget.TextView;
 import android.widget.Toast;
 
-
-// TODO: export vibrator to SDL - interface is available in SDL 1.3
-
 class Globals {
 	public static String ApplicationName = "uae";
-	// Should be zip file
-	public static String DataDownloadUrl = "http://sites.google.com/site/xpelyax/Home/alienblaster110_data.zip?attredirects=0&d=1";
-	// Set DownloadToSdcard to true if your app data is bigger than 5 megabytes.
-	// It will download app data to /sdcard/alienblaster then,
-	// otherwise it will download it to /data/data/de.schwardtnet.alienblaster/files -
-	// set this dir in jni/Android.mk in SDL_CURDIR_PATH
-	public static boolean DownloadToSdcard = false;
 	
 	public static String PREFKEY_ROM = "rom_location";
 	public static int PREFKEY_ROM_INT = 0;
@@ -509,16 +499,12 @@ protected VirtualKeypad vKeyPad = null;
     public boolean onCreateOptionsMenu(Menu menu) {
         super.onCreateOptionsMenu(menu);
 
-        // We are going to create two menus. Note that we assign them
-        // unique integer IDs, labels from our string resources, and
-        // given them shortcuts.
-        //menu.add(0, RESET_ID, 0, R.string.reset);
         menu.add(0, CONFIGURE_ID, 0, R.string.configure);
         menu.add(0, RESET_ID, 0, R.string.reset);
         menu.add(0, QUIT_ID, 0, R.string.quit);
         if (!cyclone) {
-        menu.add(0, LOAD_ID, 0, R.string.load_state);
-        menu.add(0, SAVE_ID, 0, R.string.save_state);
+        	menu.add(0, LOAD_ID, 0, R.string.load_state);
+        	menu.add(0, SAVE_ID, 0, R.string.save_state);
         }
         
         menu.add(0, INPUT_ID, 0, R.string.keyb_mode);
