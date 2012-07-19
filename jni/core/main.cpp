@@ -262,7 +262,6 @@ JAVA_EXPORT_NAME(DemoActivity_saveState) ( JNIEnv*  env, jobject  thiz,  jstring
 
 	const char *srom = (env)->GetStringUTFChars(filename, 0);
 	strcpy(savestate_filename, srom);
-	savestate_state = STATE_DOSAVE;
 	
 	switch(num)
 	{
@@ -278,6 +277,7 @@ JAVA_EXPORT_NAME(DemoActivity_saveState) ( JNIEnv*  env, jobject  thiz,  jstring
 
 	(env)->ReleaseStringUTFChars(filename, srom);
 		
+	savestate_state = STATE_DOSAVE;
 	__android_log_print(ANDROID_LOG_INFO, "UAE", "Saved %s", savestate_filename);
 
 }
@@ -298,7 +298,6 @@ JAVA_EXPORT_NAME(DemoActivity_loadState) ( JNIEnv*  env, jobject  thiz,  jstring
 
 	const char *srom = (env)->GetStringUTFChars(filename, 0);
 	strcpy(savestate_filename, srom);
-	savestate_state = STATE_DORESTORE;
 	
 	switch(num)
 	{
@@ -314,6 +313,7 @@ JAVA_EXPORT_NAME(DemoActivity_loadState) ( JNIEnv*  env, jobject  thiz,  jstring
 
 	(env)->ReleaseStringUTFChars(filename, srom);
 		
+	savestate_state = STATE_DORESTORE;
 	__android_log_print(ANDROID_LOG_INFO, "UAE", "Loaded %s", savestate_filename);
 
 	if (hackEnableSound)
