@@ -166,7 +166,7 @@ protected VirtualKeypad vKeyPad = null;
 	    			if (currentKeyboardLayout == 0) {
 	    				 // on vire le keypad Android pour mettre celui de yongzh
 						theKeyboard.setVisibility(View.INVISIBLE);
-						vKeyPad = new VirtualKeypad(mGLView, this, R.drawable.dpad, R.drawable.button);
+						vKeyPad = new VirtualKeypad(mGLView, this, R.drawable.dpad5, R.drawable.button);
 						if (mGLView.getWidth() > 0)
 							vKeyPad.resize(mGLView.getWidth(), mGLView.getHeight());
 	    			} else {
@@ -377,7 +377,7 @@ protected VirtualKeypad vKeyPad = null;
         //PowerManager pm = (PowerManager) getSystemService(Context.POWER_SERVICE);
        // wakeLock = pm.newWakeLock(PowerManager.SCREEN_DIM_WAKE_LOCK, Globals.ApplicationName);
        // wakeLock.acquire();
-        vKeyPad = new VirtualKeypad(mGLView, this, R.drawable.dpad, R.drawable.button);
+        vKeyPad = new VirtualKeypad(mGLView, this, R.drawable.dpad5, R.drawable.button);
 		if (mGLView.getWidth() > 0)
 			vKeyPad.resize(mGLView.getWidth(), mGLView.getHeight());
 		
