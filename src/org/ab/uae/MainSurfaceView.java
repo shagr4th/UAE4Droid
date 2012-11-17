@@ -325,6 +325,7 @@ public class MainSurfaceView  extends SurfaceView implements SurfaceHolder.Callb
         try {
             c = mSurfaceHolder.lockCanvas(null);
             synchronized (mSurfaceHolder) {
+            	buffer.position(0);
             	 mainScreen.copyPixelsFromBuffer(buffer);
             	 if (c != null && matrixScreen != null) {
  	            	if (aliased)
