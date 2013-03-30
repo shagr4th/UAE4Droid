@@ -39,7 +39,8 @@
 
 char prefs_df[NUM_DRIVES][128];
 char changed_df[NUM_DRIVES][128];
-char romfile[64];
+char romfile[256];
+char romkeyfile[256];
 int real_changed_df[NUM_DRIVES]={0,0};
 
 /* writable track length with normal 2us bitcell/300RPM motor */

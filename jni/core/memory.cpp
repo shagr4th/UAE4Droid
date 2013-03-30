@@ -779,7 +779,7 @@ int REGPARAM2 default_check (uaecptr a, uae_u32 b)
 
 uae_u8 REGPARAM2 *default_xlate (uaecptr a)
 {
-    write_log ("Your Amiga program just did something terribly stupid\n");
+    __android_log_print(ANDROID_LOG_ERROR, "UAE",  "Your Amiga program just did something terribly stupid\n");
     uae_reset ();
     return kickmem_xlate (get_long (0xF80000));	/* So we don't crash. */
 }
@@ -830,7 +830,39 @@ addrbank extendedkickmem_bank = {
 
 static int decode_cloanto_rom (uae_u8 *mem, int size, int real_size)
 {
-	return 0;
+	FILE *keyf;
+    uae_u8 *p;
+    long cnt, t;
+    int keysize;
+    
+    __android_log_print(ANDROID_LOG_INFO, "UAE", "decode_cloanto_rom %s", romkeyfile);
+
+    if (strlen (romkeyfile) == 0) {
+		return 0;
+    } else {
+		keyf = fopen (romkeyfile, "rb");
+        if (keyf == 0)  {
+        	__android_log_print(ANDROID_LOG_ERROR, "UAE",  "Error opening keyfile \"%s\"\n", romkeyfile );
+	        return 0;
+	    }
+	    
+	    p = (uae_u8 *)xmalloc (524288);
+		keysize = fread (p, 1, 524288, keyf);
+	    if (keysize == 0) {
+	        __android_log_print(ANDROID_LOG_ERROR, "UAE",  "Error reading keyfile \"%s\"\n", romkeyfile );
+	        return 0;
+	    }
+	    __android_log_print(ANDROID_LOG_INFO, "UAE",  "rom size: %d %d, keyfile size: %d\n", size, real_size, keysize );
+		for (t = cnt = 0; cnt < size; cnt++, t = (t + 1) % keysize)  {
+		    mem[cnt] ^= p[t];
+		    if (real_size == cnt + 1)
+				t = keysize - 1;
+		}
+		fclose (keyf);
+		free (p);
+		
+    }
+    return 1;
 }
 
 static int kickstart_checksum (uae_u8 *mem, int size)
@@ -845,7 +877,7 @@ static int kickstart_checksum (uae_u8 *mem, int size)
 	prevck = cksum;
     }
     if (cksum != 0xFFFFFFFFul) {
-	write_log ("Kickstart checksum incorrect. You probably have a corrupted ROM image.\n");
+	__android_log_print(ANDROID_LOG_ERROR, "UAE",  "Kickstart checksum incorrect. You probably have a corrupted ROM image.\n");
     }
     return 0;
 }
@@ -872,7 +904,7 @@ static int read_kickstart (FILE *f, uae_u8 *mem, int size, int dochecksum, int *
     } else if (i == size / 2) {
 	memcpy (mem + size / 2, mem, i);
     } else if (i != size) {
-	write_log ("Error while reading Kickstart.\n");
+	__android_log_print(ANDROID_LOG_ERROR, "UAE",  "Error while reading Kickstart.\n");
 	uae4all_rom_fclose (f);
 	return 0;
     }
@@ -915,7 +947,7 @@ static int load_kickstart (void)
 #if defined(AMIGA)||defined(__POS__)
 #define USE_UAE_ERSATZ "USE_UAE_ERSATZ"
 	if (!getenv (USE_UAE_ERSATZ)) {
-	    write_log ("Using current ROM. (create ENV:%s to " "use uae's ROM replacement)\n", USE_UAE_ERSATZ);
+	    __android_log_print(ANDROID_LOG_ERROR, "UAE",  "Using current ROM. (create ENV:%s to " "use uae's ROM replacement)\n", USE_UAE_ERSATZ);
 	    memcpy (kickmemory, (char *) 0x1000000 - kickmem_size, kickmem_size);
 	    kickstart_checksum (kickmemory, kickmem_size);
 	    goto chk_sum;
@@ -1131,7 +1163,7 @@ static void allocate_memory (void)
 	chipmemory = (uae_u8 *)mapped_malloc (allocated_chipmem, "chip");
 
 	if (chipmemory == 0) {
-	    write_log ("Fatal error: out of memory for chipmem.\n");
+	    __android_log_print(ANDROID_LOG_ERROR, "UAE",  "Fatal error: out of memory for chipmem.\n");
 	    allocated_chipmem = 0;
 		}	 
 		else do_put_mem_long ((uae_u32 *)(chipmemory + 4), swab_l(0));
@@ -1362,10 +1394,10 @@ void map_banks (addrbank *bank, int start, int size, int realsize)
 	realsize = size << 16;
 
     if ((size << 16) < realsize) {
-	write_log ("Please report to bmeyer@cs.monash.edu.au, and mention:\n");
-	write_log ("Broken mapping, size=%x, realsize=%x\n", size, realsize);
-	write_log ("Start is %x\n", start);
-	write_log ("Reducing memory sizes, especially chipmem, may fix this problem\n");
+	__android_log_print(ANDROID_LOG_ERROR, "UAE",  "Please report to bmeyer@cs.monash.edu.au, and mention:\n");
+	__android_log_print(ANDROID_LOG_ERROR, "UAE",  "Broken mapping, size=%x, realsize=%x\n", size, realsize);
+	__android_log_print(ANDROID_LOG_ERROR, "UAE",  "Start is %x\n", start);
+	__android_log_print(ANDROID_LOG_ERROR, "UAE",  "Reducing memory sizes, especially chipmem, may fix this problem\n");
 	return;
     }
 

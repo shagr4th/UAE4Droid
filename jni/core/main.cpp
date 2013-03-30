@@ -157,12 +157,19 @@ JAVA_EXPORT_NAME(DemoActivity_setRightMouse) ( JNIEnv*  env, jobject  thiz, jint
 }
 
 extern "C" void
-JAVA_EXPORT_NAME(DemoActivity_setPrefs) ( JNIEnv*  env, jobject  thiz, jstring rom, jstring floppy1, jstring floppy2, jstring floppy3, jstring floppy4, jint frameskip, jint m68k, jint times, jint change_sound, jint sound, jint change_disk, jint reset, jint drive_status, jint ntsc ) {
+JAVA_EXPORT_NAME(DemoActivity_setPrefs) ( JNIEnv*  env, jobject  thiz, jstring rom, jstring romkey, jstring floppy1, jstring floppy2, jstring floppy3, jstring floppy4, jint frameskip, jint m68k, jint times, jint change_sound, jint sound, jint change_disk, jint reset, jint drive_status, jint ntsc ) {
 	if (rom)
 	{
 		const char *srom = (env)->GetStringUTFChars(rom, 0);
 		strcpy(romfile, srom);
 		(env)->ReleaseStringUTFChars(rom, srom);
+	}
+	
+	if (romkey)
+	{
+		const char *sromkey = (env)->GetStringUTFChars(romkey, 0);
+		strcpy(romkeyfile, sromkey);
+		(env)->ReleaseStringUTFChars(romkey, sromkey);
 	}
 
 	if (change_disk)
