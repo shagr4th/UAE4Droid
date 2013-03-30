@@ -133,7 +133,7 @@ static void eliminate_file(char *filename)
 
 #define VRAM_MAX_LEN (384*1024)
 #define MAX_DISK_LEN 1024*(1024-128)
-#define MAX_ROM_LEN  (MAX_DISK_LEN-VRAM_MAX_LEN)
+#define MAX_ROM_LEN  11 + (MAX_DISK_LEN-VRAM_MAX_LEN)
 static void *uae4all_rom_memory=NULL;
 static unsigned uae4all_rom_len=0;
 static unsigned uae4all_rom_pos=0;
