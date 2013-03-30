@@ -90,6 +90,9 @@ class Globals {
 	public static String PREFKEY_F4 = "f4_location";
 	public static int PREFKEY_F4_INT = 4;
 	
+	public static String PREFKEY_ROMKEY = "romkey_location";
+	public static int PREFKEY_ROMKEY_INT = 5;
+	
 	public static String PREFKEY_SOUND = "sound";
 	public static String PREFKEY_DRIVESTATUS = "drivestatus";
 	public static String PREFKEY_NTSC = "ntsc";
@@ -210,6 +213,7 @@ protected VirtualKeypad vKeyPad = null;
     protected static Thread nativeThread;
 	private boolean cyclone;
     private String romPath = null;
+    private String romKeyPath = null;
     private String f1Path = null;
     private String f2Path = null;
     private String f3Path = null;
@@ -235,6 +239,7 @@ protected VirtualKeypad vKeyPad = null;
     	SharedPreferences sp = PreferenceManager.getDefaultSharedPreferences(this);
     	onSharedPreferenceChanged(sp, "useInputMethod");
     	String rPath = sp.getString(Globals.PREFKEY_ROM, null);
+    	romKeyPath = sp.getString(Globals.PREFKEY_ROMKEY, null);
     	String f1P = sp.getString(Globals.PREFKEY_F1, null);
     	String f2P = sp.getString(Globals.PREFKEY_F2, null);
     	String f3P = sp.getString(Globals.PREFKEY_F3, null);
@@ -288,7 +293,7 @@ protected VirtualKeypad vKeyPad = null;
         		 showDialog(2); 
         	} else {
 	        	// launch
-	        	setPrefs(romPath, f1P, f2P, f3P, f4P, autofs?100:fs, sc, st, changed_sound?1:0, sound, changed_disks?1:0, force_reset&&!first_start?1:0, drivestatus?1:0, ntsc?1:0);
+	        	setPrefs(romPath, romKeyPath, f1P, f2P, f3P, f4P, autofs?100:fs, sc, st, changed_sound?1:0, sound, changed_disks?1:0, force_reset&&!first_start?1:0, drivestatus?1:0, ntsc?1:0);
 	        	//Toast.makeText(this, "Starting...", Toast.LENGTH_SHORT);
 	        	setRightMouse(mouse_button);
 	        	initSDL();
@@ -487,7 +492,7 @@ protected VirtualKeypad vKeyPad = null;
     
     private static final int SHIFT_KEYB = 150;
     
-    public native void setPrefs(String rom, String floppy1, String floppy2, String floppy3, String floppy4, int frameskip, int m68k_speed, int timeslice, int change_sound, int sound, int change_disk, int reset, int drive_status, int ntsc);
+    public native void setPrefs(String rom, String romkey, String floppy1, String floppy2, String floppy3, String floppy4, int frameskip, int m68k_speed, int timeslice, int change_sound, int sound, int change_disk, int reset, int drive_status, int ntsc);
     public native void saveState(String filename, int num);
     public native void loadState(String filename, int num);
     public native void nativeReset();

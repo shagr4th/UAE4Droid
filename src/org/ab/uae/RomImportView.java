@@ -9,8 +9,8 @@ import android.app.Application;
 
 public class RomImportView extends ImportFileView {
 
-	public RomImportView() {
-		super(new String [] { "rom" } );
+	public RomImportView(String ext) {
+		super(new String [] { ext } );
 		virtualDir = false;
 	}
 

@@ -29,6 +29,7 @@ public class Settings extends PreferenceActivity {
     }
 	 
 	 Preference romPref ;
+	 Preference romKeyPref ;
 	 Preference floppy1 ;
 	 Preference floppy2 ;
 	 Preference floppy3 ;
@@ -50,7 +51,7 @@ public class Settings extends PreferenceActivity {
 				protected void onClick() {
 					Intent settingsIntent = new Intent();
 					settingsIntent.setClass(getContext(), ImportView.class);
-					settingsIntent.putExtra("import", new RomImportView());
+					settingsIntent.putExtra("import", new RomImportView("rom"));
 	           		startActivityForResult(settingsIntent, Globals.PREFKEY_ROM_INT);
 				}
 	        	
@@ -60,6 +61,24 @@ public class Settings extends PreferenceActivity {
 	        if (rompath != null)
 	        	romPref.setSummary(rompath);
 	        inlinePrefCat.addPreference(romPref);    
+	        
+	        
+	        romKeyPref = new Preference(this) {
+
+				@Override
+				protected void onClick() {
+					Intent settingsIntent = new Intent();
+					settingsIntent.setClass(getContext(), ImportView.class);
+					settingsIntent.putExtra("import", new RomImportView("key"));
+	           		startActivityForResult(settingsIntent, Globals.PREFKEY_ROMKEY_INT);
+				}
+	        	
+	        };
+	        romKeyPref.setTitle(R.string.romkey_location);
+	        String romkeypath = sp.getString(Globals.PREFKEY_ROMKEY, null);
+	        if (romkeypath != null)
+	        	romKeyPref.setSummary(romkeypath);
+	        inlinePrefCat.addPreference(romKeyPref); 
 	        
 	        floppy1 = new Preference(this) {
 
@@ -323,6 +342,10 @@ public class Settings extends PreferenceActivity {
 				 prefKey = Globals.PREFKEY_ROM;
 				 path = extras.getStringExtra("currentFile");
 				 romPref.setSummary(path);
+			 } else if (requestCode == Globals.PREFKEY_ROMKEY_INT) {
+				 prefKey = Globals.PREFKEY_ROMKEY;
+				 path = extras.getStringExtra("currentFile");
+				 romKeyPref.setSummary(path);
 			 } else if (requestCode == Globals.PREFKEY_F1_INT) {
 				 prefKey = Globals.PREFKEY_F1;
 				 path = extras.getStringExtra("currentFile");

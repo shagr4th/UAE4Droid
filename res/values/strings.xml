@@ -4,6 +4,7 @@
 <string name="paths_section">Paths</string>
 
 <string name="rom_location">ROM Location (*.rom)</string>
+<string name="romkey_location">ROM Key Location for crypted ROMs (*.key)</string>
 <string name="floppy1_location">Floppy1 Location (*.adf)</string>
 <string name="floppy2_location">Floppy2 Location (*.adf)</string>
 <string name="perf_section">Performance settings</string>
