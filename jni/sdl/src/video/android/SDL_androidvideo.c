@@ -77,7 +77,7 @@ static int ANDROID_FlipHWSurface(_THIS, SDL_Surface *surface);
 static void ANDROID_UpdateRects(_THIS, int numrects, SDL_Rect *rects);
 
 
-#define SDL_NUMMODES 3
+#define SDL_NUMMODES 4
 
 /* Private display data */
 
@@ -206,9 +206,10 @@ int ANDROID_VideoInit(_THIS, SDL_PixelFormat *vformat)
 	}
 	/* Modes sorted largest to smallest */
 	SDL_modelist[0]->w = sWindowWidth; SDL_modelist[0]->h = sWindowHeight;
-	SDL_modelist[1]->w = 320; SDL_modelist[1]->h = 240; // Always available on any screen and any orientation
-	SDL_modelist[2]->w = 320; SDL_modelist[2]->h = 200; // Always available on any screen and any orientation
-	SDL_modelist[3] = NULL;
+	SDL_modelist[1]->w = 320; SDL_modelist[1]->h = 256; // Always available on any screen and any orientation
+	SDL_modelist[2]->w = 320; SDL_modelist[2]->h = 240; // Always available on any screen and any orientation
+	SDL_modelist[3]->w = 320; SDL_modelist[3]->h = 200; // Always available on any screen and any orientation
+	SDL_modelist[4] = NULL;
 
 	//WaitForNativeRender = SDL_CreateMutex();
 	//WaitForNativeRender1 = SDL_CreateCond();
