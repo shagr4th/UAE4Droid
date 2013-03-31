@@ -28,7 +28,7 @@ void write_log_standard (const char *fmt, ...)
 	x6 = va_arg (ap, int);
 	x7 = va_arg (ap, int);
 	x8 = va_arg (ap, int);
-	fprintf (stdout, fmt, x1, x2, x3, x4, x5, x6, x7, x8);
+	_android_log_print(ANDROID_LOG_INFO, "UAE", fmt, x1, x2, x3, x4, x5, x6, x7, x8);
     }
 #endif
 }

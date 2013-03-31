@@ -99,7 +99,12 @@ void uae4all_pause_music(void) { }
 void uae4all_resume_music(void) { }
 
 #else 
-
+static jshortArray audioarray = NULL;
+static jmethodID android_sendaudio;
+static jmethodID android_initaudio;
+static jmethodID android_playSound;
+static jmethodID android_initSound;
+int sinit;
 
 static int have_sound = 0;
 
@@ -140,6 +145,12 @@ void sound_default_evtime(void)
 	schedule_audio();
 }
 
+#ifndef SDL_JAVA_PACKAGE_PATH
+#error You have to define SDL_JAVA_PACKAGE_PATH to your package path with dots replaced with underscores, for example "com_example_SanAngeles"
+#endif
+#define JAVA_EXPORT_NAME2(name,package) Java_##package##_##name
+#define JAVA_EXPORT_NAME1(name,package) JAVA_EXPORT_NAME2(name,package)
+#define JAVA_EXPORT_NAME(name) JAVA_EXPORT_NAME1(name,SDL_JAVA_PACKAGE_PATH)
 
 static int s_oldrate = 0, s_oldbits = 0, s_oldstereo = 0;
 static int sound_thread_active = 0, sound_thread_exit = 0;
@@ -241,19 +252,23 @@ void finish_sound_buffer (void)
 #endif
 
 	//printf("finish %i\n", wrcnt);
-#if 0
-	write(sounddev, sndbuffer[0], SNDBUFFER_LEN);
-	sndbufpt = render_sndbuff = sndbuffer[0];
-#else
+if (android_env && !sinit) {
+	android_sendaudio = (android_env)->GetMethodID(android_caller, "sendAudio", "([SI)I");
+	android_initaudio = (android_env)->GetMethodID(android_caller, "initAudio", "(II)V");
 
-#ifdef SOUND_USE_SEMAPHORES
-	sem_post(&sound_sem);
-	sem_wait(&callback_sem);
-#endif
-	wrcnt++;
-	sndbufpt = render_sndbuff = sndbuffer[wrcnt%SOUND_BUFFERS_COUNT];
-	//__android_log_print(ANDROID_LOG_INFO, "UAE4ALL2","Sound buffer write cnt %d buf %d\n", wrcnt, wrcnt%SOUND_BUFFERS_COUNT);
-#endif
+	(android_env)->CallVoidMethod(android_callback, android_initaudio, DEFAULT_SOUND_FREQ, 16);
+	audioarray = (android_env)->NewShortArray(SNDBUFFER_LEN);
+	sinit = 1;
+}
+
+if (android_env)
+{
+	(android_env)->SetShortArrayRegion(audioarray, 0, SNDBUFFER_LEN/2, (jshort*) sndbuffer[(wrcnt&3)]);
+	jint result = (android_env)->CallIntMethod(android_callback, android_sendaudio, audioarray, SNDBUFFER_LEN/2);
+}
+
+wrcnt++;
+sndbufpt = render_sndbuff = sndbuffer[wrcnt&3];
 
 #ifdef DEBUG_SOUND
 	dbg(" sound.c : ! finish_sound_buffer");
@@ -338,7 +353,7 @@ void pause_sound (void)
     dbg("sound.c : pause_sound");
 #endif
 
-	SDL_PauseAudio (1);
+	//SDL_PauseAudio (1);
     /* nothing to do */
 
 #ifdef DEBUG_SOUND
@@ -352,7 +367,7 @@ void resume_sound (void)
     dbg("sound.c : resume_sound");
 #endif
 
-	SDL_PauseAudio (0);
+	//SDL_PauseAudio (0);
     /* nothing to do */
 
 #ifdef DEBUG_SOUND

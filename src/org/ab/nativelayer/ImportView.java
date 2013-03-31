@@ -1,5 +1,12 @@
 package org.ab.nativelayer;
 
+import java.io.File;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
+
+import org.ab.uae.R;
+
 import android.app.ListActivity;
 import android.content.Context;
 import android.content.Intent;
@@ -9,19 +16,15 @@ import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
+import android.widget.AdapterView.OnItemLongClickListener;
 import android.widget.ArrayAdapter;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.TextView;
-import java.io.File;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
 
-import org.ab.uae.R;
-
-public class ImportView extends ListActivity {
+public class ImportView extends ListActivity implements OnItemLongClickListener {
 	
 	/**
      * text we use for the parent directory
@@ -51,7 +54,7 @@ public class ImportView extends ListActivity {
         } else
         	showDirectory(last_dir);
         
-        
+        getListView().setOnItemLongClickListener(this);
     }
     
     private File currentSelectedFile;
@@ -209,6 +212,28 @@ public class ImportView extends ListActivity {
             addView(textView, new LinearLayout.LayoutParams(LayoutParams.WRAP_CONTENT, LayoutParams.WRAP_CONTENT));
         }
     }
+
+	public boolean onItemLongClick(AdapterView<?> arg0, View arg1, int position, long id) {
+		if (importView.getExtensions() != null && importView.getExtensions().contains("dir")) {
+			if (position == 0 && PARENT_DIR.equals(this.currentFiles.get(0))) {
+	        	if (currentSelectedFile != null) {
+	        		currentSelectedFile =null;
+	        		showDirectory(this.currentDir.getAbsolutePath());
+	        	} else
+	        		showDirectory(this.currentDir.getParent());
+	        	return true;
+	        } else {
+	        	
+	        	final File file = new File(this.currentFiles.get(position));
+	        	if (file.isDirectory() && file.exists()) {
+	            	selectFile(file, null, 0);
+	            	return true;
+	        	}
+	        	
+	        }
+		}
+		return false;
+	}
 
     
 

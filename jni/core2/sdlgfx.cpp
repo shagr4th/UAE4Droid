@@ -60,7 +60,7 @@ extern int hwScaled;
 extern int gp2xMouseEmuOn;
 extern int gp2xButtonRemappingOn;
 extern int hasGp2xButtonRemapping;
-
+extern int right_mouse;
 int show_inputmode = 0;
 int show_volumecontrol;
 extern int soundVolume;
@@ -140,6 +140,7 @@ void flush_block (int ystart, int ystop)
 
 void black_screen_now(void)
 {
+	__android_log_print(ANDROID_LOG_INFO, "UAE", "black_screen_now");
 	SDL_FillRect(prSDLScreen,NULL,0);
 	SDL_Flip(prSDLScreen);
 }
@@ -217,6 +218,7 @@ static void graphics_subinit (void)
 	}
 	else
 	{
+		__android_log_print(ANDROID_LOG_INFO, "UAE", "graphics_subinit");
 		prSDLScreenPixels=(uae_u16 *)prSDLScreen->pixels;
 		SDL_LockSurface(prSDLScreen);
 		SDL_UnlockSurface(prSDLScreen);
@@ -555,12 +557,26 @@ void handle_events (void)
 			}
 			break;
 		case SDL_MOUSEBUTTONDOWN:
-		if (!gp2xButtonRemappingOn)
-			buttonstate[(rEvent.button.button-1)%3] = 1;
+		#ifdef ANDROID
+			if (right_mouse == 1)
+				buttonstate[2] = 1;
+			else
+				buttonstate[(rEvent.button.button-1)%3] = 1;
+		#else
+			if (!gp2xButtonRemappingOn)
+				buttonstate[(rEvent.button.button-1)%3] = 1;
+		#endif
 			break;
 		case SDL_MOUSEBUTTONUP:
+		#ifdef ANDROID
+			if (right_mouse == 1)
+				buttonstate[2] = 0;
+			else
+				buttonstate[(rEvent.button.button-1)%3] = 0;
+		#else
 		if (!gp2xButtonRemappingOn)
-			buttonstate[(rEvent.button.button-1)%3] = 0;
+				buttonstate[(rEvent.button.button-1)%3] = 0;
+		#endif
 			break;
 		case SDL_MOUSEMOTION:
 			mouse_state = true;

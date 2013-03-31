@@ -119,6 +119,7 @@ static void getChanges(void)
 int gui_init (void)
 {
 #ifndef PANDORA // Just to make clear we never call this SDL_SetVideoMode
+    __android_log_print(ANDROID_LOG_INFO, "UAE", "gfxHeight: %d", gfxHeight);
     if (prSDLScreen==NULL)
 			prSDLScreen = SDL_SetVideoMode(320, gfxHeight, 16, VIDEO_FLAGS);
 #endif
@@ -127,16 +128,23 @@ int gui_init (void)
     SDL_JoystickOpen(0);
     if (prSDLScreen!=NULL)
     {
-		emulating=0;
+   		emulating=0;
+#ifndef ANDROID
 		init_text(1);
 		if (!uae4all_image_file0[0])
 			run_mainMenu();
 		quit_text();
 		vkbd_init();
+#endif
+#ifdef ANDROID
+		uae4all_init_sound();
+#endif
+#ifdef GP2X
 		inputmode_init();
+#endif
 		uae4all_pause_music();
 		emulating=1;
-		getChanges();
+		//getChanges();
 		check_all_prefs();
 		reset_frameskip();
 		return 0;

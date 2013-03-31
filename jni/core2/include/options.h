@@ -22,6 +22,7 @@ extern char prefs_df[4][256];
 extern char changed_df[4][256];
 extern int real_changed_df[4];
 extern char romfile[256];
+extern char romkeyfile[256];
 extern int prefs_cpu_model;
 extern unsigned prefs_chipmem_size;
 extern unsigned prefs_bogomem_size;

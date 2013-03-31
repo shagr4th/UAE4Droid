@@ -45,6 +45,8 @@ extern "C" int main( int argc, char *argv[] );
 #include "drawing.h"
 #include "menu.h" 
 #include "gp2xutil.h"
+#include "savestate.h"
+#include "menu_config.h"
 #ifdef __WINS__
 #include "target.h"
 #endif
@@ -104,15 +106,7 @@ void default_prefs ()
     produce_sound = 2;
     prefs_gfx_framerate = 2;
 
-    strcpy (prefs_df[0], ROM_PATH_PREFIX "df0.adf");
-    strcpy (prefs_df[1], ROM_PATH_PREFIX "df1.adf");
-
-	snprintf(romfile, 256, "%s/kickstarts/%s",launchDir,kickstarts_rom_names[kickstart]);
-	FILE *f=fopen (romfile, "r" );
-	if(!f){
-		strcpy (romfile, "kick.rom");
-	}
-	else fclose(f);
+    
 
 	/* 1MB */
     prefs_chipmem_size = 0x00100000;
@@ -121,6 +115,405 @@ void default_prefs ()
 }
 
 int quit_program = 0;
+int pause_program = 0;
+int right_mouse;
+
+int mainMenu_drives = DEFAULT_DRIVES;
+int mainMenu_floppyspeed = 100;
+int mainMenu_CPU_model = DEFAULT_CPU_MODEL;
+int mainMenu_chipset = DEFAULT_CHIPSET_SELECT;
+int mainMenu_sound = DEFAULT_SOUND;
+int mainMenu_CPU_speed = 0;
+
+int mainMenu_cpuSpeed = 600;
+
+int mainMenu_joyConf = 0;
+int mainMenu_autofireRate = 8;
+int mainMenu_showStatus = DEFAULT_STATUSLN;
+int mainMenu_mouseMultiplier = DEFAULT_MOUSEMULTIPLIER;
+int mainMenu_stylusOffset = 0;
+int mainMenu_tapDelay = 10;
+int mainMenu_customControls = 0;
+int mainMenu_custom_dpad = 0;
+int mainMenu_custom_up = 0;
+int mainMenu_custom_down = 0;
+int mainMenu_custom_left = 0;
+int mainMenu_custom_right = 0;
+int mainMenu_custom_A = 0;
+int mainMenu_custom_B = 0;
+int mainMenu_custom_X = 0;
+int mainMenu_custom_Y = 0;
+int mainMenu_custom_L = 0;
+int mainMenu_custom_R = 0;
+
+int mainMenu_displayedLines = 240;
+int mainMenu_displayHires = 0;
+char presetMode[20] = "320x240 upscaled";
+int presetModeId = 2;
+int mainMenu_cutLeft = 0;
+int mainMenu_cutRight = 0;
+int mainMenu_ntsc = DEFAULT_NTSC;
+int mainMenu_frameskip = 0;
+int mainMenu_autofire = DEFAULT_AUTOFIRE;
+
+// The following params in use, but can't be changed with gui
+int mainMenu_throttle = 0;
+int mainMenu_autosave = DEFAULT_AUTOSAVE;
+int mainMenu_button1 = 0;
+int mainMenu_button2 = 0;
+int mainMenu_autofireButton1 = 0;
+int mainMenu_jump = -1;
+
+// The following params not in use, but stored to write them back to the config file
+int mainMenu_enableHWscaling = DEFAULT_SCALING;
+int gp2xClockSpeed = -1;
+int mainMenu_scanlines = 0;
+int mainMenu_ham = 1;
+int mainMenu_enableScreenshots = DEFAULT_ENABLESCREENSHOTS;
+int mainMenu_enableScripts = DEFAULT_ENABLESCRIPTS;
+
+void SetPresetMode(int mode) {}
+void update_display() {}
+void menu_raise(void) {}
+void menu_unraise(void) {}
+void init_text(int splash) {}
+void quit_text(void) {}
+void inputmode_init(void) {}
+void inputmode_redraw(void) {}
+int run_mainMenu() {}
+
+int saveMenu_n_savestate=0;
+int gp2xButtonRemappingOn=0;
+int hasGp2xButtonRemapping=0;
+int gp2xMouseEmuOn=0;
+int switch_autofire=0;
+char *statusmessages[] = { "AUTOFIRE ON\0", "AUTOFIRE OFF\0","SCREENSHOT SAVED\0","SCRIPT SAVED\0","SCRIPT AND SCREENSHOT SAVED\0"};
+int showmsg=0;
+
+int mainMenu_chipMemory = DEFAULT_CHIPMEM_SELECT;
+int mainMenu_slowMemory = 0;    /* off */
+int mainMenu_fastMemory = 0;    /* off */
+
+int mainMenu_bootHD = DEFAULT_ENABLE_HD;
+int mainMenu_filesysUnits = 0;
+int hd_dir_unit_nr = -1;
+int hd_file_unit_nr = -1;
+
+void UpdateCPUModelSettings(struct uae_prefs *p)
+{
+    switch (mainMenu_CPU_model)
+    {
+        case 1: p->cpu_level = M68020; break;
+        default: p->cpu_level = M68000; break;
+    }
+}
+
+
+void UpdateMemorySettings(struct uae_prefs *p)
+{
+    prefs_chipmem_size = 0x000080000 << mainMenu_chipMemory;
+
+    /* >2MB chip memory => 0 fast memory */
+    if ((mainMenu_chipMemory > 2) && (mainMenu_fastMemory > 0))
+    {
+        mainMenu_fastMemory = 0;
+        p->fastmem_size = 0;
+    }
+
+    switch (mainMenu_slowMemory) 
+    {
+        case 1: case 2:
+            prefs_bogomem_size = 0x00080000 << (mainMenu_slowMemory - 1);
+            break;
+        case 3:
+            prefs_bogomem_size = 0x00180000;    /* 1.5M */
+            break;
+        default:
+            prefs_bogomem_size = 0;
+    }
+
+    switch (mainMenu_fastMemory) 
+    {
+        case 0:
+            p->fastmem_size = 0;
+            break;
+        default:
+            p->fastmem_size = 0x00080000 << mainMenu_fastMemory;
+    }
+
+}
+
+
+void UpdateChipsetSettings(struct uae_prefs *p)
+{
+    switch (mainMenu_chipset) 
+    {
+        case 1: p->chipset_mask = CSMASK_ECS_AGNUS | CSMASK_ECS_DENISE; break;
+        case 2: p->chipset_mask = CSMASK_ECS_AGNUS | CSMASK_ECS_DENISE | CSMASK_AGA; break;
+        default: p->chipset_mask = CSMASK_ECS_AGNUS; break;
+    }
+}
+
+
+#ifndef SDL_JAVA_PACKAGE_PATH
+#error You have to define SDL_JAVA_PACKAGE_PATH to your package path with dots replaced with underscores, for example "com_example_SanAngeles"
+#endif
+#define JAVA_EXPORT_NAME2(name,package) Java_##package##_##name
+#define JAVA_EXPORT_NAME1(name,package) JAVA_EXPORT_NAME2(name,package)
+#define JAVA_EXPORT_NAME(name) JAVA_EXPORT_NAME1(name,SDL_JAVA_PACKAGE_PATH)
+
+extern "C" void
+JAVA_EXPORT_NAME(DemoRenderer_nativePause) ( JNIEnv*  env, jobject  thiz) {
+    pause_program = 1;
+}
+
+extern "C" void
+JAVA_EXPORT_NAME(DemoRenderer_nativeResume) ( JNIEnv*  env, jobject  thiz) {
+    pause_program = 0;
+}
+
+extern "C" void
+JAVA_EXPORT_NAME(DemoActivity_nativeReset) ( JNIEnv*  env, jobject  thiz) {
+    uae_reset();
+}
+
+extern "C" void
+JAVA_EXPORT_NAME(DemoActivity_nativeQuit) ( JNIEnv*  env, jobject  thiz) {
+    uae_quit();
+    exit(0);
+}
+
+extern "C" void
+JAVA_EXPORT_NAME(DemoActivity_setRightMouse) ( JNIEnv*  env, jobject  thiz, jint right) {
+    right_mouse = right;
+}
+
+extern "C" void
+JAVA_EXPORT_NAME(DemoActivity_setPrefs) ( JNIEnv*  env, jobject  thiz, jstring rom, jstring romkey, jstring hddir, jstring hdfile, jstring floppy1, jstring floppy2, jstring floppy3, jstring floppy4, jint frameskip, jint floppyspeed, jint cpu_model, jint chip_mem, jint slow_mem, jint fast_mem, jint chipset, jint cpu_speed, jint change_sound, jint sound, jint change_disk, jint reset, jint drive_status, jint ntsc ) {
+    if (rom)
+    {
+        const char *srom = (env)->GetStringUTFChars(rom, 0);
+        strcpy(romfile, srom);
+        (env)->ReleaseStringUTFChars(rom, srom);
+    }
+    
+    if (romkey)
+    {
+        const char *sromkey = (env)->GetStringUTFChars(romkey, 0);
+        strcpy(romkeyfile, sromkey);
+        (env)->ReleaseStringUTFChars(romkey, sromkey);
+    }
+
+    if (change_disk)
+    {
+        savestate_state = 0;
+    }
+    default_prefs_uae (&currprefs);
+    default_prefs();
+    
+    mainMenu_floppyspeed = floppyspeed;
+    mainMenu_CPU_model = cpu_model; // m68020
+    mainMenu_chipMemory = chip_mem; // 2MB
+    mainMenu_slowMemory = slow_mem;
+    mainMenu_fastMemory = fast_mem;
+    mainMenu_chipset = chipset; // aga
+    mainMenu_CPU_speed = cpu_speed; // 500/5T/a1200/12T/12T2
+
+    __android_log_print(ANDROID_LOG_INFO, "UAE", "floppyspeed= %d, cpu_model= %d, chip_mem= %d, slow_mem= %d, fast_mem= %d, chipset= %d, cpu_speed= %d", floppyspeed, cpu_model, chip_mem, slow_mem, fast_mem, chipset, cpu_speed);
+
+    UpdateCPUModelSettings(&changed_prefs);
+    UpdateMemorySettings(&changed_prefs);
+    UpdateChipsetSettings(&changed_prefs);
+    if (change_disk && uae4all_hard_dir[0] != '\0' && currprefs.mountinfo) {
+        __android_log_print(ANDROID_LOG_INFO, "UAE", "kill_filesys_unit hd dir: %s", uae4all_hard_dir);
+        kill_filesys_unit(currprefs.mountinfo, 0);
+        mainMenu_filesysUnits--;
+        hd_dir_unit_nr = -1;
+        uae4all_hard_dir[0] = '\0';
+    }
+    if (hddir && currprefs.mountinfo)
+    {            
+        const char *hddir1 = (env)->GetStringUTFChars(hddir, 0);
+        strcpy(uae4all_hard_dir, hddir1);
+        (env)->ReleaseStringUTFChars(hddir, hddir1);
+
+        __android_log_print(ANDROID_LOG_INFO, "UAE", "add_filesys_unit hd dir: %s", uae4all_hard_dir);
+        char *s2 = add_filesys_unit (currprefs.mountinfo, "DH0", uae4all_hard_dir, 1, 0, 0, 0, 0);
+        if (s2)
+            __android_log_print(ANDROID_LOG_ERROR, "UAE", "%s\n", s2);
+        hd_dir_unit_nr = mainMenu_filesysUnits++;
+    }
+    if (change_disk && uae4all_hard_file[0] != '\0' && currprefs.mountinfo) {
+        __android_log_print(ANDROID_LOG_INFO, "UAE", "kill_filesys_unit hd file: %s", uae4all_hard_file);
+        kill_filesys_unit(currprefs.mountinfo, 0);
+        mainMenu_filesysUnits--;
+        hd_file_unit_nr = -1;
+        uae4all_hard_file[0] = '\0';
+    } 
+    if (hdfile && currprefs.mountinfo)
+    {
+        const char *hdfile1 = (env)->GetStringUTFChars(hdfile, 0);
+        strcpy(uae4all_hard_file, hdfile1);
+        (env)->ReleaseStringUTFChars(hdfile, hdfile1);
+        __android_log_print(ANDROID_LOG_INFO, "UAE", "add_filesys_unit hd file: %s", uae4all_hard_file);
+        char *s2 = add_filesys_unit (currprefs.mountinfo, 0, uae4all_hard_file, 0, 32, 1, 2, 512);
+        if (s2)
+            __android_log_print(ANDROID_LOG_ERROR, "UAE", "%s\n", s2);
+        hd_file_unit_nr = mainMenu_filesysUnits++;
+    }
+    if (floppy1)
+    {
+        const char *sfloppy1 = (env)->GetStringUTFChars(floppy1, 0);
+        
+        if (change_disk) {
+            strcpy(changed_df[0], sfloppy1);
+            real_changed_df[0]=1;
+            __android_log_print(ANDROID_LOG_INFO, "UAE", "change floppy1: %s", changed_df[0]);
+        } else
+            strcpy(prefs_df[0], sfloppy1);
+        (env)->ReleaseStringUTFChars(floppy1, sfloppy1);
+        
+    } else
+        strcpy (prefs_df[0], "/sdcard/df0.adf");
+    if (floppy2)
+    {
+        const char *sfloppy2 = (env)->GetStringUTFChars(floppy2, 0);
+        
+        if (change_disk) {
+            strcpy(changed_df[1], sfloppy2);
+            real_changed_df[1]=1;
+        } else
+            strcpy(prefs_df[1], sfloppy2);
+        (env)->ReleaseStringUTFChars(floppy2, sfloppy2);
+        //__android_log_print(ANDROID_LOG_INFO, "UAE", "prefs_df[1]: %s", prefs_df[1]);
+    } else
+        strcpy (prefs_df[1], "/sdcard/df1.adf");
+
+    if (floppy3)
+    {
+        const char *sfloppy3 = (env)->GetStringUTFChars(floppy3, 0);
+        
+        if (change_disk) {
+            strcpy(changed_df[2], sfloppy3);
+            real_changed_df[2]=1;
+        } else
+            strcpy(prefs_df[2], sfloppy3);
+        (env)->ReleaseStringUTFChars(floppy3, sfloppy3);
+        //__android_log_print(ANDROID_LOG_INFO, "UAE", "prefs_df[1]: %s", prefs_df[1]);
+    } else
+        strcpy (prefs_df[2], "/sdcard/df2.adf");
+
+    if (floppy4)
+    {
+        const char *sfloppy4 = (env)->GetStringUTFChars(floppy4, 0);
+        
+        if (change_disk) {
+            strcpy(changed_df[3], sfloppy4);
+            real_changed_df[3]=1;
+        } else
+            strcpy(prefs_df[3], sfloppy4);
+        (env)->ReleaseStringUTFChars(floppy4, sfloppy4);
+        //__android_log_print(ANDROID_LOG_INFO, "UAE", "prefs_df[1]: %s", prefs_df[1]);
+    } else
+        strcpy (prefs_df[3], "/sdcard/df3.adf");
+
+    mainMenu_showStatus = drive_status;
+    mainMenu_ntsc = ntsc;
+
+    if (change_sound)
+        changed_produce_sound = sound;
+    else {
+        produce_sound = sound;
+        changed_produce_sound = sound;
+    }
+
+    if (frameskip >= 100)   
+        prefs_gfx_framerate = -1;
+    else
+        prefs_gfx_framerate = frameskip;
+    m68k_speed = 0;
+    check_prefs_changed_cpu();
+    check_prefs_changed_audio();
+    //DISK_init();
+
+
+
+    //__android_log_print(ANDROID_LOG_INFO, "UAE", "prefs_df[0]: %s", prefs_df[0]);
+    //__android_log_print(ANDROID_LOG_INFO, "UAE", "prefs_df[1]: %s", prefs_df[1]);
+    //__android_log_print(ANDROID_LOG_INFO, "UAE", "m68k_speed: %d / timeslice_mode: %d", m68k_speed, timeslice_mode);
+
+    if (reset) {
+
+        uae_reset();
+    }
+}
+
+extern "C" void
+JAVA_EXPORT_NAME(DemoActivity_saveState) ( JNIEnv*  env, jobject  thiz,  jstring filename, jint num) {
+
+    const char *srom = (env)->GetStringUTFChars(filename, 0);
+    strcpy(savestate_filename, srom);
+    
+    switch(num)
+    {
+        case 1:
+            strcat(savestate_filename,"-1.asf");
+        case 2:
+            strcat(savestate_filename,"-2.asf");
+        case 3:
+            strcat(savestate_filename,"-3.asf");
+        default: 
+            strcat(savestate_filename,".asf");
+    }
+
+    (env)->ReleaseStringUTFChars(filename, srom);
+        
+    savestate_state = STATE_DOSAVE;
+    __android_log_print(ANDROID_LOG_INFO, "UAE", "Saved %s", savestate_filename);
+
+}
+
+extern "C" void
+JAVA_EXPORT_NAME(DemoActivity_loadState) ( JNIEnv*  env, jobject  thiz,  jstring filename, jint num) {
+
+    // shagrath : don't ask
+    int hackEnableSound = 0;
+    if (!produce_sound)
+    {
+        changed_produce_sound = 1;
+        check_prefs_changed_audio();
+        hackEnableSound = 1;
+    }
+
+    //
+
+    const char *srom = (env)->GetStringUTFChars(filename, 0);
+    strcpy(savestate_filename, srom);
+    
+    switch(num)
+    {
+        case 1:
+            strcat(savestate_filename,"-1.asf");
+        case 2:
+            strcat(savestate_filename,"-2.asf");
+        case 3:
+            strcat(savestate_filename,"-3.asf");
+        default: 
+            strcat(savestate_filename,".asf");
+    }
+
+    (env)->ReleaseStringUTFChars(filename, srom);
+        
+    savestate_state = STATE_DORESTORE;
+    __android_log_print(ANDROID_LOG_INFO, "UAE", "Loaded %s", savestate_filename);
+
+    if (hackEnableSound)
+    {
+        changed_produce_sound = 0;
+        check_prefs_changed_audio();
+    }
+
+}
 
 void uae_reset (void)
 {
@@ -155,6 +548,7 @@ void reset_all_systems (void)
  */
 void do_start_program (void)
 {
+    __android_log_print(ANDROID_LOG_INFO, "UAE", "do_start_program");
 	quit_program = 2;
 	reset_frameskip();
 	m68k_go (1);
@@ -192,14 +586,13 @@ void real_main (int argc, char **argv)
 #endif
 	);
 #endif
-	getcwd(launchDir,250);
+	
     /* PocketUAE prefs */
-    default_prefs_uae (&currprefs);
-    default_prefs();
+   
 #ifdef GP2X
     gp2x_init(argc, argv);
 #endif
-    loadconfig (1);
+    //loadconfig (1);
 
     if (! graphics_setup ()) {
 		exit (1);
@@ -215,7 +608,7 @@ void real_main (int argc, char **argv)
     }
     init_joystick ();
 
-	int err = gui_init ();
+    int err = gui_init ();
 	if (err == -1) {
 	    write_log ("Failed to initialize the GUI\n");
 	} else if (err == -2) {
@@ -247,11 +640,12 @@ void real_main (int argc, char **argv)
 #ifndef USE_FAME_CORE
     compiler_init ();
 #endif
-    gui_update ();
+    //gui_update ();
 
 #ifdef GP2X
     switch_to_hw_sdl(1);
 #endif
+    if (graphics_init())
 	{
 		start_program ();
 	}
@@ -261,7 +655,7 @@ void real_main (int argc, char **argv)
 #ifndef NO_MAIN_IN_MAIN_C
 int main (int argc, char *argv[])
 {
-	gfxHeight = 270;
+	gfxHeight = 240;
 	hwScaled = 1;
 
     real_main (argc, argv);

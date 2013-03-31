@@ -46,6 +46,7 @@ int real_changed_df[4]={0,0};
 char prefs_df[4][256];
 char changed_df[4][256];
 char romfile[256];
+char romkeyfile[256];
 int real_changed_df[4]={0,0};
 
 

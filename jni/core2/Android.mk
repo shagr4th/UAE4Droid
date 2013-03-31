@@ -2,7 +2,7 @@ LOCAL_PATH := $(call my-dir)
 
 include $(CLEAR_VARS)
 
-LOCAL_MODULE    := uae
+LOCAL_MODULE    := uae2
 
 CG_SUBDIRS := \
 src
@@ -18,15 +18,18 @@ LOCAL_CFLAGS     += -Wno-psabi
 LOCAL_CFLAGS	 += -DSDL_JAVA_PACKAGE_PATH=$(SDL_JAVA_PACKAGE_PATH) -DANDROID -DOS_ANDROID
 LOCAL_CFLAGS	 += -fomit-frame-pointer -Wno-unused -Wno-format -DUSE_SDL -DGCCCONSTFUNC="__attribute__((const))" -DUSE_UNDERSCORE -fno-exceptions -DUNALIGNED_PROFITABLE -DOPTIMIZED_FLAGS -DSHM_SUPPORT_LINKS=0 -DOS_WITHOUT_MEMORY_MANAGEMENT
 
-LOCAL_SRC_FILES  := audio.cpp autoconf.cpp blitfunc.cpp blittable.cpp blitter.cpp cfgfile.cpp cia.cpp compiler.cpp custom.cpp disk.cpp drawing.cpp ersatz.cpp expansion.cpp filesys.cpp fsdb.cpp fsdb_unix.cpp fsusage.cpp gfxutil.cpp hardfile.cpp keybuf.cpp main.cpp memory.cpp missing.cpp native2amiga.cpp gui.cpp od-joy.cpp scsi-none.cpp savedisk.cpp savestate.cpp sdlgfx.cpp writelog.cpp zfile.cpp vkbd/vkbd.cpp
+LOCAL_SRC_FILES  := audio.cpp autoconf.cpp blitfunc.cpp blittable.cpp blitter.cpp cfgfile.cpp cia.cpp savedisk.cpp savestate.cpp compiler.cpp custom.cpp disk.cpp drawing.cpp ersatz.cpp expansion.cpp filesys.cpp fsdb.cpp fsdb_unix.cpp fsusage.cpp gfxutil.cpp hardfile.cpp keybuf.cpp main.cpp memory.cpp missing.cpp native2amiga.cpp gui.cpp od-joy.cpp scsi-none.cpp sdlgfx.cpp writelog.cpp zfile.cpp vkbd/vkbd.cpp sound_android.cpp
 
 LOCAL_ARM_MODE := arm
 
 LOCAL_CFLAGS +=  -O3 
-LOCAL_CFLAGS += -fstrict-aliasing -mstructure-size-boundary=32 -fexpensive-optimizations
+LOCAL_CFLAGS += -fstrict-aliasing -fexpensive-optimizations
 LOCAL_CFLAGS += -fweb -frename-registers -fomit-frame-pointer
 LOCAL_CFLAGS += -falign-functions=32 -falign-loops -falign-labels -falign-jumps
 LOCAL_CFLAGS += -finline -finline-functions -fno-builtin
+ifeq ($(TARGET_ARCH),arm)
+LOCAL_CFLAGS += -mstructure-size-boundary=32
+endif
 
 LOCAL_CFLAGS += -DUSE_AUTOCONFIG
 LOCAL_CFLAGS += -DUSE_ZFILE

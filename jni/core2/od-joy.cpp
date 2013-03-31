@@ -92,7 +92,7 @@ void read_joystick(int nr, unsigned int *dir, int *button)
     nr = (~nr)&0x1;
 
     SDL_JoystickUpdate ();
-#if !defined (DREAMCAST) && !defined (GP2X) && !defined (GIZMONDO) && !defined (PSP)
+#if !defined (DREAMCAST) && !defined (GP2X) && !defined (GIZMONDO) && !defined (PSP) && !defined (ANDROID)
     struct joy_range *r = nr == 0 ? &range0 : &range1;
     x_axis = SDL_JoystickGetAxis (joy, 0);
     y_axis = SDL_JoystickGetAxis (joy, 1);
@@ -415,6 +415,28 @@ if(!gp2xMouseEmuOn && !gp2xButtonRemappingOn)
     // support second joystick button
     *button |= (SDL_JoystickGetButton (joy, 2) & 1) << 1;
 #else
+#ifdef ANDROID
+	x_axis = SDL_JoystickGetAxis (joy, 0);
+	y_axis = SDL_JoystickGetAxis (joy, 1);
+
+	if (x_axis < 0)
+		left = 1;
+	else if (x_axis > 0)
+		right = 1;
+	if (y_axis < 0)
+		top = 1;
+	else if (y_axis > 0)
+		bot = 1;
+
+	num = SDL_JoystickNumButtons (joy);
+	if (num > 16)
+	num = 16;
+	for (i = 0; i < num; i++)
+	*button |= (SDL_JoystickGetButton (joy, i) & 1) << i;
+	//if (left) top = !top;
+	//if (right) bot = !bot;
+	*dir = bot | (right << 1) | (top << 8) | (left << 9);
+#else
 #ifdef GIZMONDO
     int hat=SDL_JoystickGetHat(joy,0);
 
@@ -510,6 +532,7 @@ if(!gp2xMouseEmuOn && !gp2xButtonRemappingOn)
 		if (right) bot = !bot;
 		*dir = bot | (right << 1) | (top << 8) | (left << 9);
 	}
+#endif
 #endif
 #endif
 }

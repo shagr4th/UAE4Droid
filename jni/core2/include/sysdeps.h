@@ -17,6 +17,7 @@
 #include <errno.h>
 #include <assert.h>
 #include <limits.h>
+#include <android/log.h>
 
 #ifdef _GCCRES_
 #undef _GCCRES_

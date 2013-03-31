@@ -1123,7 +1123,39 @@ addrbank extendedkickmem_bank = {
 
 static int decode_cloanto_rom (uae_u8 *mem, int size, int real_size)
 {
-	return 0;
+	FILE *keyf;
+    uae_u8 *p;
+    long cnt, t;
+    int keysize;
+    
+    __android_log_print(ANDROID_LOG_INFO, "UAE", "decode_cloanto_rom %s", romkeyfile);
+
+    if (strlen (romkeyfile) == 0) {
+        return 0;
+    } else {
+        keyf = fopen (romkeyfile, "rb");
+        if (keyf == 0)  {
+            __android_log_print(ANDROID_LOG_ERROR, "UAE",  "Error opening keyfile \"%s\"\n", romkeyfile );
+            return 0;
+        }
+        
+        p = (uae_u8 *)xmalloc (524288);
+        keysize = fread (p, 1, 524288, keyf);
+        if (keysize == 0) {
+            __android_log_print(ANDROID_LOG_ERROR, "UAE",  "Error reading keyfile \"%s\"\n", romkeyfile );
+            return 0;
+        }
+        __android_log_print(ANDROID_LOG_INFO, "UAE",  "rom size: %d %d, keyfile size: %d\n", size, real_size, keysize );
+        for (t = cnt = 0; cnt < size; cnt++, t = (t + 1) % keysize)  {
+            mem[cnt] ^= p[t];
+            if (real_size == cnt + 1)
+                t = keysize - 1;
+        }
+        fclose (keyf);
+        free (p);
+        
+    }
+    return 1;
 }
 
 static int kickstart_checksum (uae_u8 *mem, int size)

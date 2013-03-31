@@ -14,7 +14,7 @@ extern void real_main (int, char **);
 extern void usage (void);
 extern void parse_cmdline (int argc, char **argv);
 
-#define NUM_DRIVES 2
+#define NUM_DRIVES 4
 
 
 extern void uae_reset (void);
@@ -22,6 +22,7 @@ extern void uae_quit (void);
 extern void reset_all_systems (void);
 
 extern int quit_program;
+extern int pause_program;
 
 extern char warning_buffer[256];
 

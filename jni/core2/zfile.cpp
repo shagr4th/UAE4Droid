@@ -132,7 +132,7 @@ static void eliminate_file(char *filename)
 
 #define VRAM_MAX_LEN (384*1024)
 #define MAX_DISK_LEN 1024*(1024-128)
-#define MAX_ROM_LEN  (MAX_DISK_LEN-VRAM_MAX_LEN)
+#define MAX_ROM_LEN  11 + (MAX_DISK_LEN-VRAM_MAX_LEN)
 static void *uae4all_rom_memory=NULL;
 static unsigned uae4all_rom_len=0;
 static unsigned uae4all_rom_pos=0;
@@ -233,7 +233,7 @@ static char *get_namefile(unsigned num)
 	}
 	snprintf((char *)&__uae4all_write_namefile[0], 256, "%s/saves/%.8X.ads",launchDir, crc);
 #else
-	snprintf((char *)&__uae4all_write_namefile[0], 256, SAVE_PREFIX "%.8X.ads",crc);
+	snprintf((char *)&__uae4all_write_namefile[0], 256, "/sdcard/%.8X.ads",crc);
 #endif
 	return (char *)&__uae4all_write_namefile[0];
 }

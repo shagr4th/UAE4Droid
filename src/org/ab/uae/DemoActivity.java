@@ -78,20 +78,26 @@ class Globals {
 	public static String PREFKEY_ROM = "rom_location";
 	public static int PREFKEY_ROM_INT = 0;
 	
+	public static String PREFKEY_HDD = "hdd_location";
+	public static int PREFKEY_HDD_INT = 1;
+	
+	public static String PREFKEY_HDF = "hdf_location";
+	public static int PREFKEY_HDF_INT = 2;
+	
 	public static String PREFKEY_F1 = "f1_location";
-	public static int PREFKEY_F1_INT = 1;
+	public static int PREFKEY_F1_INT = 3;
 	
 	public static String PREFKEY_F2 = "f2_location";
-	public static int PREFKEY_F2_INT = 2;
+	public static int PREFKEY_F2_INT = 4;
 	
 	public static String PREFKEY_F3 = "f3_location";
-	public static int PREFKEY_F3_INT = 3;
+	public static int PREFKEY_F3_INT = 5;
 	
 	public static String PREFKEY_F4 = "f4_location";
-	public static int PREFKEY_F4_INT = 4;
+	public static int PREFKEY_F4_INT = 6;
 	
 	public static String PREFKEY_ROMKEY = "romkey_location";
-	public static int PREFKEY_ROMKEY_INT = 5;
+	public static int PREFKEY_ROMKEY_INT = 7;
 	
 	public static String PREFKEY_SOUND = "sound";
 	public static String PREFKEY_DRIVESTATUS = "drivestatus";
@@ -99,11 +105,16 @@ class Globals {
 	public static String PREFKEY_AFS = "auto_frameskip";
 	public static String PREFKEY_FS = "frameskip";
 	public static String PREFKEY_SC = "system_clock";
-	public static String PREFKEY_ST = "sync_threshold";
-	
-	public static String PREFKEY_CYCLONE = "cyclone_core";
 	
 	public static String PREFKEY_START = "start";
+	
+	public static String PREF_CPU_MODEL = "cpu_model";
+	public static String PREF_CHIP_MEM = "chip_mem";
+	public static String PREF_SLOW_MEM = "slow_mem";
+	public static String PREF_FAST_MEM = "fast_mem";
+	public static String PREF_CHIPSET = "chipset";
+	public static String PREF_CPU_SPEED = "cpu_speed";
+	public static String PREF_FLOPPY_SPEED = "floppy_speed";
 }
 
 public class DemoActivity extends Activity implements GameKeyListener {
@@ -199,9 +210,7 @@ protected VirtualKeypad vKeyPad = null;
         tv.setText("Initializing");
         setContentView(tv);
         downloader = new DataDownloader(this, tv);*/
-        SharedPreferences sp = PreferenceManager.getDefaultSharedPreferences(this);
-        cyclone = sp.getBoolean(Globals.PREFKEY_CYCLONE, false);
-    	System.loadLibrary(cyclone?"uaecyclone":"uae");
+        System.loadLibrary("uae2");
         checkConf();
         checkFiles(false);
         
@@ -211,9 +220,10 @@ protected VirtualKeypad vKeyPad = null;
     }
     
     protected static Thread nativeThread;
-	private boolean cyclone;
-    private String romPath = null;
+	private String romPath = null;
     private String romKeyPath = null;
+    private String hdPath = null;
+    private String hdfPath = null;
     private String f1Path = null;
     private String f2Path = null;
     private String f3Path = null;
@@ -240,6 +250,8 @@ protected VirtualKeypad vKeyPad = null;
     	onSharedPreferenceChanged(sp, "useInputMethod");
     	String rPath = sp.getString(Globals.PREFKEY_ROM, null);
     	romKeyPath = sp.getString(Globals.PREFKEY_ROMKEY, null);
+    	String hdDir = sp.getString(Globals.PREFKEY_HDD, null);
+    	String hdFile = sp.getString(Globals.PREFKEY_HDF, null);
     	String f1P = sp.getString(Globals.PREFKEY_F1, null);
     	String f2P = sp.getString(Globals.PREFKEY_F2, null);
     	String f3P = sp.getString(Globals.PREFKEY_F3, null);
@@ -249,8 +261,15 @@ protected VirtualKeypad vKeyPad = null;
     	boolean drivestatus = sp.getBoolean(Globals.PREFKEY_DRIVESTATUS, false);
     	boolean ntsc = sp.getBoolean(Globals.PREFKEY_NTSC, false);
     	int fs = Integer.parseInt(sp.getString(Globals.PREFKEY_FS, "2"));
-    	int sc = Integer.parseInt(sp.getString(Globals.PREFKEY_SC, "0"));
-    	int st = Integer.parseInt(sp.getString(Globals.PREFKEY_ST, "0"));
+    	
+    	int cpu_model = Integer.parseInt(sp.getString(Globals.PREF_CPU_MODEL, "0"));
+    	int chip_mem = Integer.parseInt(sp.getString(Globals.PREF_CHIP_MEM, "1"));
+    	int slow_mem = Integer.parseInt(sp.getString(Globals.PREF_SLOW_MEM, "0"));
+    	int fast_mem = Integer.parseInt(sp.getString(Globals.PREF_FAST_MEM, "0"));
+    	int chipset = Integer.parseInt(sp.getString(Globals.PREF_CHIPSET, "0"));
+    	int cpu_speed = Integer.parseInt(sp.getString(Globals.PREF_CPU_SPEED, "0"));
+    	int floppy_speed = Integer.parseInt(sp.getString(Globals.PREF_FLOPPY_SPEED, "800"));
+    	
     	boolean first_start = false;
     	boolean changed_disks = false;
     	boolean changed_sound = false;
@@ -265,9 +284,11 @@ protected VirtualKeypad vKeyPad = null;
     			romChange = true;
     		romPath = rPath;
     	}
-    	if (!first_start && ((f1P != null && !f1P.equals(f1Path)) || (f2P != null && !f2P.equals(f2Path)) || (f3P != null && !f3P.equals(f3Path)) || (f4P != null && !f4P.equals(f4Path)))) {
+    	if (!first_start && ((hdDir != null && !hdDir.equals(hdPath)) || (hdFile != null && !hdFile.equals(hdfPath)) || (f1P != null && !f1P.equals(f1Path)) || (f2P != null && !f2P.equals(f2Path)) || (f3P != null && !f3P.equals(f3Path)) || (f4P != null && !f4P.equals(f4Path)))) {
     		changed_disks = true;
     	}
+    	hdPath = hdDir;
+    	hdfPath = hdFile;
     	f1Path = f1P;
     	f2Path = f2P;
     	f3Path = f3P;
@@ -288,12 +309,16 @@ protected VirtualKeypad vKeyPad = null;
         boolean twoPlayers = sp.getBoolean("twoPlayers", false);
         MainSurfaceView.setNumJoysticks(twoPlayers?2:1);
         
+        //hdDir = "/sdcard/Roms/amiga/HD/Superfrog_v1.2_0035/Superfrog";
+        if (hdDir != null && hdDir.length() > 0 && !hdDir.endsWith("/"))
+        	hdDir = hdDir + "/";
+        
         if (romOk) {
         	if (romChange) {
         		 showDialog(2); 
         	} else {
 	        	// launch
-	        	setPrefs(romPath, romKeyPath, f1P, f2P, f3P, f4P, autofs?100:fs, sc, st, changed_sound?1:0, sound, changed_disks?1:0, force_reset&&!first_start?1:0, drivestatus?1:0, ntsc?1:0);
+	        	setPrefs(romPath, romKeyPath, hdDir, hdFile, f1P, f2P, f3P, f4P, autofs?100:fs, floppy_speed, cpu_model, chip_mem, slow_mem, fast_mem, chipset, cpu_speed, changed_sound?1:0, sound, changed_disks?1:0, force_reset&&!first_start?1:0, drivestatus?1:0, ntsc?1:0);
 	        	//Toast.makeText(this, "Starting...", Toast.LENGTH_SHORT);
 	        	setRightMouse(mouse_button);
 	        	initSDL();
@@ -492,7 +517,7 @@ protected VirtualKeypad vKeyPad = null;
     
     private static final int SHIFT_KEYB = 150;
     
-    public native void setPrefs(String rom, String romkey, String floppy1, String floppy2, String floppy3, String floppy4, int frameskip, int m68k_speed, int timeslice, int change_sound, int sound, int change_disk, int reset, int drive_status, int ntsc);
+    public native void setPrefs(String rom, String romkey, String hdDir, String hdFile, String floppy1, String floppy2, String floppy3, String floppy4, int frameskip, int floppy_speed, int cpu_model, int chip_mem, int slow_mem, int fast_mem, int chipset, int cpu_speed, int change_sound, int sound, int change_disk, int reset, int drive_status, int ntsc);
     public native void saveState(String filename, int num);
     public native void loadState(String filename, int num);
     public native void nativeReset();
@@ -507,11 +532,8 @@ protected VirtualKeypad vKeyPad = null;
         menu.add(0, CONFIGURE_ID, 0, R.string.configure);
         menu.add(0, RESET_ID, 0, R.string.reset);
         menu.add(0, QUIT_ID, 0, R.string.quit);
-        if (!cyclone) {
-        	menu.add(0, LOAD_ID, 0, R.string.load_state);
-        	menu.add(0, SAVE_ID, 0, R.string.save_state);
-        }
-        
+        menu.add(0, LOAD_ID, 0, R.string.load_state);
+        menu.add(0, SAVE_ID, 0, R.string.save_state);
         menu.add(0, INPUT_ID, 0, R.string.keyb_mode);
         menu.add(0, TOUCH_ID, 0, R.string.show_touch);
         menu.add(0, MOUSE_ID, 0, R.string.change_mouse);
@@ -554,11 +576,19 @@ protected VirtualKeypad vKeyPad = null;
         		setRightMouse(mouse_button);
         		break;
         	case LOAD_ID:
-        		if (f1Path != null)
+        		if (hdfPath != null)
+        			loadState(hdfPath, 0);
+        		else if (hdPath != null)
+        			loadState("save_" + hdPath, 0);
+        		else if (f1Path != null)
         			loadState(f1Path, 0);
         		break;
         	case SAVE_ID:
-        		if (f1Path != null)
+        		if (hdfPath != null)
+        			saveState(hdfPath, 0);
+        		else if (hdPath != null)
+        			saveState("save_" + hdPath, 0);
+        		else if (f1Path != null)
         			saveState(f1Path, 0);
         		break;
         	case QUIT_ID:

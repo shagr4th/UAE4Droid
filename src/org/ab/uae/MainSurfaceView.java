@@ -53,8 +53,8 @@ public class MainSurfaceView  extends SurfaceView implements SurfaceHolder.Callb
         	action = 2;
         if (  action >= 0 ) {
         	
-        	int x = (int) ((event.getX() / (float) width)* (float) bufferWidth);
-        	int y = (int) ((event.getY() / (float) height)* (float) bufferHeight);
+        	int x = (int) ((event.getX() / (float) width)* (float) mRenderer.bufferWidth);
+        	int y = (int) ((event.getY() / (float) height)* (float) mRenderer.bufferHeight);
             nativeMouse(x , y, action, 0 );
         }
         return true;
@@ -184,14 +184,14 @@ public class MainSurfaceView  extends SurfaceView implements SurfaceHolder.Callb
 			mParent.getWindowManager().getDefaultDisplay().getMetrics(metrics);
 	        pixels = (int) (leftDPIs * metrics.density + 0.5f);
 	        Log.i("uae", "pixels: " + pixels);
-	        scaleX = (float) (width-pixels)/bufferWidth;
-			scaleY = (float) height/bufferHeight;
+	        scaleX = (float) (width-pixels)/mRenderer.bufferWidth;
+			scaleY = (float) height/mRenderer.bufferHeight;
 			coordsChanged = true;
 			
 		} else {
 			pixels = 0;
-			scaleX = (float) width/bufferWidth;
-			scaleY = (float) height/bufferHeight;
+			scaleX = (float) width/mRenderer.bufferWidth;
+			scaleY = (float) height/mRenderer.bufferHeight;
 			coordsChanged = true;
 			
 		}
@@ -219,8 +219,8 @@ public class MainSurfaceView  extends SurfaceView implements SurfaceHolder.Callb
         
 		this.width = w;
 		this.height = h;
-		scaleX = (float) (width-pixels)/bufferWidth;
-		scaleY = (float) height/bufferHeight;
+		scaleX = (float) (width-pixels)/mRenderer.bufferWidth;
+		scaleY = (float) height/mRenderer.bufferHeight;
 		if (width < height) {
 			scaleY = scaleX;
 		}
@@ -249,17 +249,17 @@ public class MainSurfaceView  extends SurfaceView implements SurfaceHolder.Callb
 		 pixelsH = 0;
 		 if ("scaled".equals(scale)) {
 			 scaleX = scaleY;
-			 pixels = (int) ((width - bufferWidth*scaleX) / 2);
+			 pixels = (int) ((width - mRenderer.bufferWidth*scaleX) / 2);
 		 } else if ("1x".equals(scale)) {
 			 scaleX = 1.0f;
 			 scaleY = 1.0f;
-			 pixels = (int) ((width - bufferWidth*scaleX) / 2);
-			 pixelsH = (int) ((height - bufferHeight*scaleX) / 2);
+			 pixels = (int) ((width - mRenderer.bufferWidth*scaleX) / 2);
+			 pixelsH = (int) ((height - mRenderer.bufferHeight*scaleX) / 2);
 		 } else if ("2x".equals(scale)) {
 			 scaleX = 2.0f;
 			 scaleY = 2.0f;
-			 pixels = (int) ((width - bufferWidth*scaleX) / 2);
-			 pixelsH = (int) ((height - bufferHeight*scaleX) / 2);
+			 pixels = (int) ((width - mRenderer.bufferWidth*scaleX) / 2);
+			 pixelsH = (int) ((height - mRenderer.bufferHeight*scaleX) / 2);
 		 }
 		}
 		 matrixScreen = new Matrix();
@@ -270,8 +270,6 @@ public class MainSurfaceView  extends SurfaceView implements SurfaceHolder.Callb
 	protected float scaleX;
 	protected float scaleY;
 	protected boolean coordsChanged;
-	protected int bufferWidth = 320;
-	protected int bufferHeight = 240;
 	protected int width;
 	protected int height;
 	protected int pixels;
@@ -289,9 +287,9 @@ public class MainSurfaceView  extends SurfaceView implements SurfaceHolder.Callb
 	public void surfaceCreated(SurfaceHolder holder) {
 		if (buffer == null) {
 			Log.i("UAE", "surfaceCreated");
-	    	ByteBuffer bb = ByteBuffer.allocateDirect(320*240*2);
+	    	ByteBuffer bb = ByteBuffer.allocateDirect(mRenderer.bufferWidth*mRenderer.bufferHeight*2);
 	    	buffer = bb.asShortBuffer();
-	    	 mainScreen = Bitmap.createBitmap(320, 240, Bitmap.Config.RGB_565);
+	    	 mainScreen = Bitmap.createBitmap(mRenderer.bufferWidth, mRenderer.bufferHeight, Bitmap.Config.RGB_565);
 	    	 
 	    	 //updater =new ScreenUpdater(this);
 	    	 //updater.start();

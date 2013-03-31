@@ -15,10 +15,6 @@ SDL_CURDIR_PATH := /sdcard
 # so if application expects you to press and hold button it will process the event correctly.
 SDL_TRACKBALL_KEYUP_DELAY := 4
 
-ifeq ($(TARGET_ARCH),arm) 
-include $(call all-subdir-makefiles)
-endif
 
-ifneq ($(TARGET_ARCH),arm)
-include jni/core/Android.mk jni/sdl/Android.mk jni/sdl_mixer/Android.mk jni/tremor/Android.mk
-endif 
+include jni/core2/Android.mk jni/sdl/Android.mk jni/sdl_mixer/Android.mk jni/tremor/Android.mk
+

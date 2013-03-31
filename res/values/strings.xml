@@ -5,6 +5,8 @@
 
 <string name="rom_location">ROM Location (*.rom)</string>
 <string name="romkey_location">ROM Key Location for crypted ROMs (*.key)</string>
+<string name="hdd_location">HD Directory (Long touch to select)</string>
+<string name="hdf_location">HD File Location (*.hdf)</string>
 <string name="floppy1_location">Floppy1 Location (*.adf)</string>
 <string name="floppy2_location">Floppy2 Location (*.adf)</string>
 <string name="perf_section">Performance settings</string>
@@ -32,8 +34,26 @@
 <string-array name="fs_entries"><item>1</item><item>2</item><item>3</item><item>4</item><item>5</item><item>6</item><item>7</item><item>8</item><item>9</item></string-array>
 <string-array name="sc_entries"><item>0</item><item>2</item><item>4</item></string-array>
 <string-array name="sc_entries_summary"><item>100%</item><item>83%</item><item>75%</item></string-array>
-<string-array name="st_entries"><item>0</item><item>1</item><item>2</item><item>3</item></string-array>
-<string-array name="st_entries_summary"><item>100%</item><item>83%</item><item>75%</item><item>50%</item></string-array>
+
+<string name="cpu_model">CPU Model</string>
+<string-array name="cpu_model_entries"><item>0</item><item>1</item></string-array>
+<string-array  name="cpu_model_summary"><item>M68000</item><item>M68020</item></string-array>
+
+<string name="chipmem">Chip Memory Size</string>
+<string name="slowmem">Slow Memory Size</string>
+<string name="fastmem">Fast Memory Size</string>
+<string-array name="mem_entries"><item>0</item><item>1</item><item>2</item><item>3</item><item>4</item></string-array>
+<string-array name="mem_summary"><item>512kB</item><item>1MB</item><item>2MB</item><item>4MB</item><item>8MB</item></string-array>
+<string-array name="mem2_entries"><item>0</item><item>1</item><item>2</item><item>3</item><item>4</item></string-array>
+<string-array name="mem2_summary"><item>0MB</item><item>1MB</item><item>2MB</item><item>4MB</item><item>8MB</item></string-array>
+
+<string name="chipset">Chipset Model</string>
+<string-array name="chipset_entries"><item>0</item><item>1</item><item>2</item></string-array>
+<string-array name="chipset_summary"><item>Original (Agnus)</item><item>Extended (Denise)</item><item>AGA</item></string-array>
+
+<string name="cpu_speed">CPU Speed</string>
+<string-array name="cpu_speed_entries"><item>0</item><item>1</item><item>2</item><item>3</item><item>4</item></string-array>
+<string-array name="cpu_speed_summary"><item>500</item><item>500T</item><item>1200</item><item>1200T</item><item>1200T2</item></string-array>
 
 <string name="show_touch">Show touch controls</string>
 <string name="hide_touch">Hide touch controls</string>
@@ -49,7 +69,7 @@
 <string name="cyclone_core">Cyclone M68k emulation</string>
 <string name="cyclone_desc">ARM optimized core (No save states, needs App Restart!)</string>
 <string name="notes">Notes</string>
-<string name="release_notes_097">New in v0.998:\n\n- Fixed menu button disappearing with some devices.\n- Fixed potential failures when loading save states.\n\nNew in v0.997:\n\n- Orientation support\n- Small key mapping changes, you may have to reconfigure them !\n- SHIFT and ARROW keys are now available, both for physical mapping and displayed in the virtual keyboard alt section (the up arrow next to \'Z\').\n- Virtual keyboard is now multitouch, so let\'s say pinball games are now quite enjoyable in portrait mode :).\n\nNew in v0.996:\n\n- Added SPACE mapping in physical controls section.\n- Fixed RETURN key on virtual keyboard.\n- Fixed inverted downleft/downright.\n- MIPS support.\n\nNew in v0.995:\n\n- Small maintenance update.\n- x86 Support !.\n- Alternate "input method" option for bluetooth connectivity.\n- Two players support (Physical controls via Bluetooth).\n- Screen always on when amiga is running.\n\nNew in v0.99:\n\n- Better multitouch controls.\n- Cyclone core not the default one anymore.\n- Screen size option.\n- Floppy removal.\n\nNew in v0.98.1:\n\n- Mouse clicks on physical keys\n- Revert regression on 1.5 devices and ROM issues on Cyclone Core?\n\nNew in v0.97:\n\n- Optional new CPU core + save states. ARM Cyclone Core still enabled by default because it\'s faster. Your choice (I hope to manage save states on Cyclone one day).\n\n- Different graphic management: No more relying on OpenGL for framebuffer support : too much performance differences between devices\n\n- Right mouse support\n\n- Fire with trackball by default\n\n- NTSC support\n\n- FPS/Drive loading status bar</string>
+<string name="release_notes_097">New in v1.10:\n\n- New core based on uae4all2: AGA and Amiga 1200 Support. YOUR PREVIOUS SAVE STATES ARE NOT COMPATIBLE WITH THIS NEW ONE, SORRY :(\n- HD files (.hdf) and dirs support (didn\'t really tested the HD dir support, just tell me).\n- New settings for memory sizes, chipset, model, etc.\n- Amiga Forever ROMs support (New rom key setting).\n- Removed the old cyclone core.\n\nNew in v0.998:\n\n- Fixed menu button disappearing with some devices.\n- Fixed potential failures when loading save states.\n\nNew in v0.997:\n\n- Orientation support\n- Small key mapping changes, you may have to reconfigure them !\n- SHIFT and ARROW keys are now available, both for physical mapping and displayed in the virtual keyboard alt section (the up arrow next to \'Z\').\n- Virtual keyboard is now multitouch, so let\'s say pinball games are now quite enjoyable in portrait mode :).\n\nNew in v0.996:\n\n- Added SPACE mapping in physical controls section.\n- Fixed RETURN key on virtual keyboard.\n- Fixed inverted downleft/downright.\n- MIPS support.\n\nNew in v0.995:\n\n- Small maintenance update.\n- x86 Support !.\n- Alternate "input method" option for bluetooth connectivity.\n- Two players support (Physical controls via Bluetooth).\n- Screen always on when amiga is running.\n\nNew in v0.99:\n\n- Better multitouch controls.\n- Cyclone core not the default one anymore.\n- Screen size option.\n- Floppy removal.\n\nNew in v0.98.1:\n\n- Mouse clicks on physical keys\n- Revert regression on 1.5 devices and ROM issues on Cyclone Core?\n\nNew in v0.97:\n\n- Optional new CPU core + save states. ARM Cyclone Core still enabled by default because it\'s faster. Your choice (I hope to manage save states on Cyclone one day).\n\n- Different graphic management: No more relying on OpenGL for framebuffer support : too much performance differences between devices\n\n- Right mouse support\n\n- Fire with trackball by default\n\n- NTSC support\n\n- FPS/Drive loading status bar</string>
 <string name="ok">OK</string>
 <string name="start_amiga">Start Amiga</string>
 <string name="configure_amiga">Configure</string>
@@ -60,6 +80,8 @@
 <string-array name="joystick_size"><item>small</item><item>medium</item><item>large</item></string-array>
 <string-array name="screen_size"><item>stretched</item><item>scaled</item><item>2x</item><item>1x</item></string-array>
 <string name="screen_size_text">Screen Size</string>
+<string name="remove_hdd">Remove HD Directory</string>
+<string name="remove_hdf">Remove HD File</string>
 <string name="remove_floppy1">Remove Floppy1</string>
 <string name="remove_floppy2">Remove Floppy2</string>
 <string name="remove_floppy3">Remove Floppy3</string>

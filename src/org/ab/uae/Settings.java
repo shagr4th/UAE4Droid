@@ -6,7 +6,6 @@ import org.ab.nativelayer.KeyPreference;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.SharedPreferences.Editor;
-import android.os.Build;
 import android.os.Bundle;
 import android.preference.CheckBoxPreference;
 import android.preference.ListPreference;
@@ -15,9 +14,10 @@ import android.preference.PreferenceActivity;
 import android.preference.PreferenceCategory;
 import android.preference.PreferenceManager;
 import android.preference.PreferenceScreen;
+import android.preference.Preference.OnPreferenceChangeListener;
 import android.view.KeyEvent;
 
-public class Settings extends PreferenceActivity {
+public class Settings extends PreferenceActivity implements OnPreferenceChangeListener {
 	
 	 @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -30,10 +30,18 @@ public class Settings extends PreferenceActivity {
 	 
 	 Preference romPref ;
 	 Preference romKeyPref ;
+	 Preference hddFile ;
+	 Preference hdfFile ;
 	 Preference floppy1 ;
 	 Preference floppy2 ;
 	 Preference floppy3 ;
 	 Preference floppy4 ;
+	 ListPreference fsCpuModelPref;
+	 ListPreference fsChipMemPref;
+	 ListPreference fsFastMemPref;
+	 ListPreference fsSlowMemPref;
+	 ListPreference fsChipSetPref;
+	 ListPreference fsCpuSpeedPref;
 	 
 	 private PreferenceScreen createPreferenceHierarchy() {
 	        // Root
@@ -79,6 +87,72 @@ public class Settings extends PreferenceActivity {
 	        if (romkeypath != null)
 	        	romKeyPref.setSummary(romkeypath);
 	        inlinePrefCat.addPreference(romKeyPref); 
+	        
+	        hdfFile = new Preference(this) {
+
+				@Override
+				protected void onClick() {
+					
+					Intent settingsIntent = new Intent();
+					settingsIntent.setClass(getContext(), ImportView.class);
+					settingsIntent.putExtra("import", new RomImportView("hdf"));
+	           		startActivityForResult(settingsIntent, Globals.PREFKEY_HDF_INT);
+					
+				}
+	        	
+	        };
+	        rompath = sp.getString(Globals.PREFKEY_HDF, null);
+	        if (rompath != null)
+	        	hdfFile.setSummary(rompath);
+	        
+	        hdfFile.setTitle(R.string.hdf_location);
+	        inlinePrefCat.addPreference(hdfFile);
+	        if (rompath != null) {
+	        	Preference rFloppyHDF = new Preference(this) {
+					@Override
+					protected void onClick() {
+						Editor e = sp.edit();
+						e.remove(Globals.PREFKEY_HDF);
+						e.commit();
+						hdfFile.setSummary("");
+					}
+		        };
+		        rFloppyHDF.setTitle(R.string.remove_hdf);
+		        inlinePrefCat.addPreference(rFloppyHDF);
+	        }
+	        
+	        hddFile = new Preference(this) {
+
+				@Override
+				protected void onClick() {
+					
+					Intent settingsIntent = new Intent();
+					settingsIntent.setClass(getContext(), ImportView.class);
+					settingsIntent.putExtra("import", new RomImportView("dir"));
+	           		startActivityForResult(settingsIntent, Globals.PREFKEY_HDD_INT);
+					
+				}
+	        	
+	        };
+	        rompath = sp.getString(Globals.PREFKEY_HDD, null);
+	        if (rompath != null)
+	        	hddFile.setSummary(rompath);
+	        
+	        hddFile.setTitle(R.string.hdd_location);
+	        inlinePrefCat.addPreference(hddFile);
+	        if (rompath != null) {
+	        	Preference rFloppyHDD = new Preference(this) {
+					@Override
+					protected void onClick() {
+						Editor e = sp.edit();
+						e.remove(Globals.PREFKEY_HDD);
+						e.commit();
+						hddFile.setSummary("");
+					}
+		        };
+		        rFloppyHDD.setTitle(R.string.remove_hdd);
+		        inlinePrefCat.addPreference(rFloppyHDD);
+	        }
 	        
 	        floppy1 = new Preference(this) {
 
@@ -211,14 +285,6 @@ public class Settings extends PreferenceActivity {
 	        perfPrefCat.setTitle(R.string.perf_section);
 	        root.addPreference(perfPrefCat);
 	        
-	        CheckBoxPreference toggleCyclonePref = new CheckBoxPreference(this);
-	        toggleCyclonePref.setKey(Globals.PREFKEY_CYCLONE);
-	        toggleCyclonePref.setTitle(R.string.cyclone_core);
-	        toggleCyclonePref.setSummary(R.string.cyclone_desc);
-	        toggleCyclonePref.setDefaultValue(false);
-	        toggleCyclonePref.setEnabled(Build.CPU_ABI.toLowerCase().startsWith("arm"));
-	        perfPrefCat.addPreference(toggleCyclonePref);
-	        
 	        CheckBoxPreference toggleSoundPref = new CheckBoxPreference(this);
 	        toggleSoundPref.setKey(Globals.PREFKEY_SOUND);
 	        toggleSoundPref.setTitle(R.string.sound);
@@ -252,7 +318,62 @@ public class Settings extends PreferenceActivity {
 	        toggleNTSCPref.setDefaultValue(false);
 	        perfPrefCat.addPreference(toggleNTSCPref);
 	        
-	        ListPreference sc1Pref = new ListPreference(this);
+	        fsCpuModelPref = new ListPreference(this);
+	        fsCpuModelPref.setEntries(R.array.cpu_model_summary);
+	        fsCpuModelPref.setEntryValues(R.array.cpu_model_entries);
+	        fsCpuModelPref.setDefaultValue("0");
+	        fsCpuModelPref.setDialogTitle(R.string.cpu_model);
+	        fsCpuModelPref.setKey(Globals.PREF_CPU_MODEL);
+	        fsCpuModelPref.setTitle(R.string.cpu_model);
+	        fsCpuModelPref.setOnPreferenceChangeListener(this);
+	        perfPrefCat.addPreference(fsCpuModelPref);
+	        
+	        fsChipMemPref = new ListPreference(this);
+	        fsChipMemPref.setEntries(R.array.mem_summary);
+	        fsChipMemPref.setEntryValues(R.array.mem_entries);
+	        fsChipMemPref.setDefaultValue("1");
+	        fsChipMemPref.setDialogTitle(R.string.chipmem);
+	        fsChipMemPref.setKey(Globals.PREF_CHIP_MEM);
+	        fsChipMemPref.setTitle(R.string.chipmem);
+	        perfPrefCat.addPreference(fsChipMemPref);
+	        
+	        fsFastMemPref = new ListPreference(this);
+	        fsFastMemPref.setEntries(R.array.mem2_summary);
+	        fsFastMemPref.setEntryValues(R.array.mem2_entries);
+	        fsFastMemPref.setDefaultValue("0");
+	        fsFastMemPref.setDialogTitle(R.string.fastmem);
+	        fsFastMemPref.setKey(Globals.PREF_FAST_MEM);
+	        fsFastMemPref.setTitle(R.string.fastmem);
+	        perfPrefCat.addPreference(fsFastMemPref);
+	        
+	        fsSlowMemPref = new ListPreference(this);
+	        fsSlowMemPref.setEntries(R.array.mem2_summary);
+	        fsSlowMemPref.setEntryValues(R.array.mem2_entries);
+	        fsSlowMemPref.setDefaultValue("0");
+	        fsSlowMemPref.setDialogTitle(R.string.slowmem);
+	        fsSlowMemPref.setKey(Globals.PREF_SLOW_MEM);
+	        fsSlowMemPref.setTitle(R.string.slowmem);
+	        perfPrefCat.addPreference(fsSlowMemPref);
+	        
+	        fsChipSetPref = new ListPreference(this);
+	        fsChipSetPref.setEntries(R.array.chipset_summary);
+	        fsChipSetPref.setEntryValues(R.array.chipset_entries);
+	        fsChipSetPref.setDefaultValue("0");
+	        fsChipSetPref.setDialogTitle(R.string.chipset);
+	        fsChipSetPref.setKey(Globals.PREF_CHIPSET);
+	        fsChipSetPref.setTitle(R.string.chipset);
+	        perfPrefCat.addPreference(fsChipSetPref);
+	        
+	        fsCpuSpeedPref = new ListPreference(this);
+	        fsCpuSpeedPref.setEntries(R.array.cpu_speed_summary);
+	        fsCpuSpeedPref.setEntryValues(R.array.cpu_speed_entries);
+	        fsCpuSpeedPref.setDefaultValue("0");
+	        fsCpuSpeedPref.setDialogTitle(R.string.cpu_speed);
+	        fsCpuSpeedPref.setKey(Globals.PREF_CPU_SPEED);
+	        fsCpuSpeedPref.setTitle(R.string.cpu_speed);
+	        perfPrefCat.addPreference(fsCpuSpeedPref);
+	        
+	        /*ListPreference sc1Pref = new ListPreference(this);
 	        sc1Pref.setEntries(R.array.sc_entries_summary);
 	        sc1Pref.setEntryValues(R.array.sc_entries);
 	        sc1Pref.setDefaultValue("0");
@@ -260,17 +381,7 @@ public class Settings extends PreferenceActivity {
 	        sc1Pref.setKey(Globals.PREFKEY_SC);
 	        sc1Pref.setTitle(R.string.system_clock);
 	        sc1Pref.setSummary(R.string.system_clock_summary);
-	        perfPrefCat.addPreference(sc1Pref);
-	        
-	        ListPreference st1Pref = new ListPreference(this);
-	        st1Pref.setEntries(R.array.st_entries_summary);
-	        st1Pref.setEntryValues(R.array.st_entries);
-	        st1Pref.setDefaultValue("0");
-	        st1Pref.setDialogTitle(R.string.sync_threshold);
-	        st1Pref.setKey(Globals.PREFKEY_ST);
-	        st1Pref.setTitle(R.string.sync_threshold);
-	        st1Pref.setSummary(R.string.system_clock_summary);
-	        perfPrefCat.addPreference(st1Pref);
+	        perfPrefCat.addPreference(sc1Pref);*/
 	        
 	        PreferenceCategory portPrefCat = new PreferenceCategory(this);
 	        portPrefCat.setTitle(R.string.mapping_settings);
@@ -326,6 +437,13 @@ public class Settings extends PreferenceActivity {
 	        	screenPref.addPreference(new KeyPreference(this, null, DemoActivity.default_keycodes_string[i], DemoActivity.default_keycodes[i], new int [] { KeyEvent.KEYCODE_MENU }));
 	        }
 	        
+	        onPreferenceChange(fsCpuModelPref, sp.getString(Globals.PREF_CPU_MODEL, "0"));
+	        onPreferenceChange(fsCpuSpeedPref, sp.getString(Globals.PREF_CPU_SPEED, "0"));
+	        onPreferenceChange(fsChipMemPref, sp.getString(Globals.PREF_CHIP_MEM, "1"));
+	        onPreferenceChange(fsFastMemPref, sp.getString(Globals.PREF_FAST_MEM, "0"));
+	        onPreferenceChange(fsSlowMemPref, sp.getString(Globals.PREF_SLOW_MEM, "0"));
+	        onPreferenceChange(fsChipSetPref, sp.getString(Globals.PREF_CHIPSET, "0"));
+	        
 	        setResult(RESULT_OK);
 	        
 	        return root;
@@ -346,6 +464,14 @@ public class Settings extends PreferenceActivity {
 				 prefKey = Globals.PREFKEY_ROMKEY;
 				 path = extras.getStringExtra("currentFile");
 				 romKeyPref.setSummary(path);
+			 } else if (requestCode == Globals.PREFKEY_HDD_INT) {
+				 prefKey = Globals.PREFKEY_HDD;
+				 path = extras.getStringExtra("currentFile");
+				 hddFile.setSummary(path);
+			 } else if (requestCode == Globals.PREFKEY_HDF_INT) {
+				 prefKey = Globals.PREFKEY_HDF;
+				 path = extras.getStringExtra("currentFile");
+				 hdfFile.setSummary(path);
 			 } else if (requestCode == Globals.PREFKEY_F1_INT) {
 				 prefKey = Globals.PREFKEY_F1;
 				 path = extras.getStringExtra("currentFile");
@@ -371,5 +497,30 @@ public class Settings extends PreferenceActivity {
 			 }
 		 }
 	 }
+
+
+
+	public boolean onPreferenceChange(Preference preference, Object newValue) {
+		if (Globals.PREF_CPU_MODEL.equals(preference.getKey())) {
+			int nV = Integer.parseInt(newValue.toString());
+			fsCpuModelPref.setSummary(getResources().getStringArray(R.array.cpu_model_summary)[nV]);
+		} else if (Globals.PREF_CPU_SPEED.equals(preference.getKey())) {
+			int nV = Integer.parseInt(newValue.toString());
+			fsCpuSpeedPref.setSummary(getResources().getStringArray(R.array.cpu_speed_summary)[nV]);
+		} else if (Globals.PREF_CHIP_MEM.equals(preference.getKey())) {
+			int nV = Integer.parseInt(newValue.toString());
+			fsChipMemPref.setSummary(getResources().getStringArray(R.array.mem_summary)[nV]);
+		} else if (Globals.PREF_FAST_MEM.equals(preference.getKey())) {
+			int nV = Integer.parseInt(newValue.toString());
+			fsFastMemPref.setSummary(getResources().getStringArray(R.array.mem2_summary)[nV]);
+		} else if (Globals.PREF_SLOW_MEM.equals(preference.getKey())) {
+			int nV = Integer.parseInt(newValue.toString());
+			fsSlowMemPref.setSummary(getResources().getStringArray(R.array.mem2_summary)[nV]);
+		} else if (Globals.PREF_CHIPSET.equals(preference.getKey())) {
+			int nV = Integer.parseInt(newValue.toString());
+			fsChipSetPref.setSummary(getResources().getStringArray(R.array.chipset_summary)[nV]);
+		}
+		return true;
+	}
 
 }

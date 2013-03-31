@@ -248,6 +248,10 @@ static void m68k_run (void)
 	//uae4all_reset ();
 	unsigned cycles, cycles_actual=M68KCONTEXT.cycles_counter;
 	for (;;) {
+		while (pause_program > 0)
+		{
+			usleep(200000);
+		}
 #ifdef DEBUG_M68K
 		dbg_cycle(m68k_fetch(m68k_get_pc(),0));
 		m68k_emulate(1);
