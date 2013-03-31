@@ -412,15 +412,15 @@ protected VirtualKeypad vKeyPad = null;
 			vKeyPad.resize(mGLView.getWidth(), mGLView.getHeight());
 		
         if (theKeyboard == null) {
-        theKeyboard = (KeyboardView) findViewById(R.id.EditKeyboard01);
-        layouts = new Keyboard [3];
-        layouts[0] = new Keyboard(this, R.xml.joystick);
-        layouts[1] = new Keyboard(this, R.xml.qwerty);
-        layouts[2] = new Keyboard(this, R.xml.qwerty2);
-        theKeyboard.setKeyboard(layouts[currentKeyboardLayout]);
-        theKeyboard.setOnKeyboardActionListener(new theKeyboardActionListener());
-        theKeyboard.setVisibility(View.INVISIBLE);
-        theKeyboard.setPreviewEnabled(false);
+	        theKeyboard = (KeyboardView) findViewById(R.id.EditKeyboard01);
+	        layouts = new Keyboard [3];
+	        layouts[0] = new Keyboard(this, R.xml.joystick);
+	        layouts[1] = new Keyboard(this, R.xml.qwerty);
+	        layouts[2] = new Keyboard(this, R.xml.qwerty2);
+	        theKeyboard.setKeyboard(layouts[currentKeyboardLayout]);
+	        theKeyboard.setOnKeyboardActionListener(new theKeyboardActionListener());
+	        theKeyboard.setVisibility(View.INVISIBLE);
+	        theKeyboard.setPreviewEnabled(false);
         }
         
         
@@ -604,12 +604,13 @@ protected VirtualKeypad vKeyPad = null;
 			touch = false;
 			if (item != null)
 				item.setTitle(R.string.show_touch);
-			theKeyboard.setVisibility(View.INVISIBLE);
+			if (theKeyboard != null)
+				theKeyboard.setVisibility(View.INVISIBLE);
 		} else {
 			touch = true;
 			if (item != null)
 				item.setTitle(R.string.hide_touch);
-			if (currentKeyboardLayout != 0)
+			if (theKeyboard != null && currentKeyboardLayout != 0)
 				theKeyboard.setVisibility(View.VISIBLE);
 		}
 		if (mGLView != null && vKeyPad == null) {
