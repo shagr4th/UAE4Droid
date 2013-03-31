@@ -1,5 +1,6 @@
 package org.ab.uae;
 
+import org.ab.nativelayer.DirImportView;
 import org.ab.nativelayer.ImportView;
 import org.ab.nativelayer.KeyPreference;
 
@@ -10,11 +11,11 @@ import android.os.Bundle;
 import android.preference.CheckBoxPreference;
 import android.preference.ListPreference;
 import android.preference.Preference;
+import android.preference.Preference.OnPreferenceChangeListener;
 import android.preference.PreferenceActivity;
 import android.preference.PreferenceCategory;
 import android.preference.PreferenceManager;
 import android.preference.PreferenceScreen;
-import android.preference.Preference.OnPreferenceChangeListener;
 import android.view.KeyEvent;
 
 public class Settings extends PreferenceActivity implements OnPreferenceChangeListener {
@@ -42,6 +43,7 @@ public class Settings extends PreferenceActivity implements OnPreferenceChangeLi
 	 ListPreference fsSlowMemPref;
 	 ListPreference fsChipSetPref;
 	 ListPreference fsCpuSpeedPref;
+	 ListPreference fsFloppySpeedPref;
 	 
 	 private PreferenceScreen createPreferenceHierarchy() {
 	        // Root
@@ -127,7 +129,7 @@ public class Settings extends PreferenceActivity implements OnPreferenceChangeLi
 				protected void onClick() {
 					
 					Intent settingsIntent = new Intent();
-					settingsIntent.setClass(getContext(), ImportView.class);
+					settingsIntent.setClass(getContext(), DirImportView.class);
 					settingsIntent.putExtra("import", new RomImportView("dir"));
 	           		startActivityForResult(settingsIntent, Globals.PREFKEY_HDD_INT);
 					
@@ -378,6 +380,16 @@ public class Settings extends PreferenceActivity implements OnPreferenceChangeLi
 	        fsCpuSpeedPref.setOnPreferenceChangeListener(this);
 	        perfPrefCat.addPreference(fsCpuSpeedPref);
 	        
+	        fsFloppySpeedPref = new ListPreference(this);
+	        fsFloppySpeedPref.setEntries(R.array.floppy_speed_entries);
+	        fsFloppySpeedPref.setEntryValues(R.array.floppy_speed_entries);
+	        fsFloppySpeedPref.setDefaultValue("100");
+	        fsFloppySpeedPref.setDialogTitle(R.string.floppy_speed);
+	        fsFloppySpeedPref.setKey(Globals.PREF_FLOPPY_SPEED);
+	        fsFloppySpeedPref.setTitle(R.string.floppy_speed);
+	        fsFloppySpeedPref.setOnPreferenceChangeListener(this);
+	        perfPrefCat.addPreference(fsFloppySpeedPref);
+	        
 	        /*ListPreference sc1Pref = new ListPreference(this);
 	        sc1Pref.setEntries(R.array.sc_entries_summary);
 	        sc1Pref.setEntryValues(R.array.sc_entries);
@@ -448,6 +460,7 @@ public class Settings extends PreferenceActivity implements OnPreferenceChangeLi
 	        onPreferenceChange(fsFastMemPref, sp.getString(Globals.PREF_FAST_MEM, "0"));
 	        onPreferenceChange(fsSlowMemPref, sp.getString(Globals.PREF_SLOW_MEM, "0"));
 	        onPreferenceChange(fsChipSetPref, sp.getString(Globals.PREF_CHIPSET, "0"));
+	        onPreferenceChange(fsFloppySpeedPref, sp.getString(Globals.PREF_FLOPPY_SPEED, "100"));
 	        
 	        setResult(RESULT_OK);
 	        
@@ -524,6 +537,8 @@ public class Settings extends PreferenceActivity implements OnPreferenceChangeLi
 		} else if (Globals.PREF_CHIPSET.equals(preference.getKey())) {
 			int nV = Integer.parseInt(newValue.toString());
 			fsChipSetPref.setSummary(getResources().getStringArray(R.array.chipset_summary)[nV]);
+		} else if (Globals.PREF_FLOPPY_SPEED.equals(preference.getKey())) {
+			fsFloppySpeedPref.setSummary(newValue.toString() + "%%");
 		}
 		return true;
 	}
