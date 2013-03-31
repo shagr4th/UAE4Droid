@@ -114,7 +114,7 @@ class Globals {
 	public static String PREF_FAST_MEM = "fast_mem";
 	public static String PREF_CHIPSET = "chipset";
 	public static String PREF_CPU_SPEED = "cpu_speed";
-	public static String PREF_FLOPPY_SPEED = "floppy_speed";
+	public static String PREF_FLOPPY_SPEED = "floppyspeed";
 }
 
 public class DemoActivity extends Activity implements GameKeyListener {
@@ -268,7 +268,7 @@ protected VirtualKeypad vKeyPad = null;
     	int fast_mem = Integer.parseInt(sp.getString(Globals.PREF_FAST_MEM, "0"));
     	int chipset = Integer.parseInt(sp.getString(Globals.PREF_CHIPSET, "0"));
     	int cpu_speed = Integer.parseInt(sp.getString(Globals.PREF_CPU_SPEED, "0"));
-    	int floppy_speed = Integer.parseInt(sp.getString(Globals.PREF_FLOPPY_SPEED, "800"));
+    	int floppy_speed = Integer.parseInt(sp.getString(Globals.PREF_FLOPPY_SPEED, "100"));
     	
     	boolean first_start = false;
     	boolean changed_disks = false;
