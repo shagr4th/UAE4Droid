@@ -338,7 +338,7 @@ JAVA_EXPORT_NAME(DemoActivity_setPrefs) ( JNIEnv*  env, jobject  thiz, jstring r
         (env)->ReleaseStringUTFChars(hddir, hddir1);
 
         __android_log_print(ANDROID_LOG_INFO, "UAE", "add_filesys_unit hd dir: %s", uae4all_hard_dir);
-        char *s2 = add_filesys_unit (currprefs.mountinfo, "DH0", uae4all_hard_dir, 1, 0, 0, 0, 0);
+        char *s2 = add_filesys_unit (currprefs.mountinfo, "HD0", uae4all_hard_dir, 1, 0, 0, 0, 0);
         if (s2)
             __android_log_print(ANDROID_LOG_ERROR, "UAE", "%s\n", s2);
         hd_dir_unit_nr = mainMenu_filesysUnits++;
