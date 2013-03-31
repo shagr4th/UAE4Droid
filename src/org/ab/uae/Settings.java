@@ -335,6 +335,7 @@ public class Settings extends PreferenceActivity implements OnPreferenceChangeLi
 	        fsChipMemPref.setDialogTitle(R.string.chipmem);
 	        fsChipMemPref.setKey(Globals.PREF_CHIP_MEM);
 	        fsChipMemPref.setTitle(R.string.chipmem);
+	        fsChipMemPref.setOnPreferenceChangeListener(this);
 	        perfPrefCat.addPreference(fsChipMemPref);
 	        
 	        fsFastMemPref = new ListPreference(this);
@@ -344,6 +345,7 @@ public class Settings extends PreferenceActivity implements OnPreferenceChangeLi
 	        fsFastMemPref.setDialogTitle(R.string.fastmem);
 	        fsFastMemPref.setKey(Globals.PREF_FAST_MEM);
 	        fsFastMemPref.setTitle(R.string.fastmem);
+	        fsFastMemPref.setOnPreferenceChangeListener(this);
 	        perfPrefCat.addPreference(fsFastMemPref);
 	        
 	        fsSlowMemPref = new ListPreference(this);
@@ -353,6 +355,7 @@ public class Settings extends PreferenceActivity implements OnPreferenceChangeLi
 	        fsSlowMemPref.setDialogTitle(R.string.slowmem);
 	        fsSlowMemPref.setKey(Globals.PREF_SLOW_MEM);
 	        fsSlowMemPref.setTitle(R.string.slowmem);
+	        fsSlowMemPref.setOnPreferenceChangeListener(this);
 	        perfPrefCat.addPreference(fsSlowMemPref);
 	        
 	        fsChipSetPref = new ListPreference(this);
@@ -362,6 +365,7 @@ public class Settings extends PreferenceActivity implements OnPreferenceChangeLi
 	        fsChipSetPref.setDialogTitle(R.string.chipset);
 	        fsChipSetPref.setKey(Globals.PREF_CHIPSET);
 	        fsChipSetPref.setTitle(R.string.chipset);
+	        fsChipSetPref.setOnPreferenceChangeListener(this);
 	        perfPrefCat.addPreference(fsChipSetPref);
 	        
 	        fsCpuSpeedPref = new ListPreference(this);
@@ -371,6 +375,7 @@ public class Settings extends PreferenceActivity implements OnPreferenceChangeLi
 	        fsCpuSpeedPref.setDialogTitle(R.string.cpu_speed);
 	        fsCpuSpeedPref.setKey(Globals.PREF_CPU_SPEED);
 	        fsCpuSpeedPref.setTitle(R.string.cpu_speed);
+	        fsCpuSpeedPref.setOnPreferenceChangeListener(this);
 	        perfPrefCat.addPreference(fsCpuSpeedPref);
 	        
 	        /*ListPreference sc1Pref = new ListPreference(this);
