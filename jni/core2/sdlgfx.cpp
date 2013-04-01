@@ -601,7 +601,7 @@ void handle_events (void)
 			}
 			else
 			{
-				int mouseScale = mainMenu_mouseMultiplier * 4;
+				int mouseScale = mainMenu_mouseMultiplier * 1;
 				if (mouseScale > 99)
 					mouseScale /= 100;
 

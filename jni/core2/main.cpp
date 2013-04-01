@@ -130,7 +130,7 @@ int mainMenu_cpuSpeed = 600;
 int mainMenu_joyConf = 0;
 int mainMenu_autofireRate = 8;
 int mainMenu_showStatus = DEFAULT_STATUSLN;
-int mainMenu_mouseMultiplier = DEFAULT_MOUSEMULTIPLIER;
+int mainMenu_mouseMultiplier = 1;
 int mainMenu_stylusOffset = 0;
 int mainMenu_tapDelay = 10;
 int mainMenu_customControls = 0;
@@ -431,6 +431,8 @@ JAVA_EXPORT_NAME(DemoActivity_setPrefs) ( JNIEnv*  env, jobject  thiz, jstring r
         prefs_gfx_framerate = -1;
     else
         prefs_gfx_framerate = frameskip;
+    changed_gfx_framerate = prefs_gfx_framerate;
+    __android_log_print(ANDROID_LOG_INFO, "UAE", "prefs_gfx_framerate: %d", prefs_gfx_framerate);
     m68k_speed = 0;
     check_prefs_changed_cpu();
     check_prefs_changed_audio();
