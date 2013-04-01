@@ -33,7 +33,7 @@ public class VirtualKeypad {
 
 	private GameKeyListener gameKeyListener;
 	private int keyStates;
-	private float dpadDeadZone = DPAD_DEADZONE_VALUES[2];
+	private float dpadDeadZone = DPAD_DEADZONE_VALUES[0];
 
 	private ArrayList<Control> controls = new ArrayList<Control>();
 	private Control dpad;
@@ -66,7 +66,7 @@ public class VirtualKeypad {
 		
 		//int value = prefs.getInt("dpadDeadZone", 2);
 		//value = (value < 0 ? 0 : (value > 4 ? 4 : value));
-		dpadDeadZone = DPAD_DEADZONE_VALUES[2];
+		dpadDeadZone = DPAD_DEADZONE_VALUES[0];
 		
 		dpad.hide(prefs.getBoolean("hideDpad", false));
 		buttons.hide(!Wrapper.supportsMultitouch(context) || prefs.getBoolean("hideButtons", false));
@@ -103,6 +103,10 @@ public class VirtualKeypad {
 			return 1.0f;
 		if ("large".equals(value))
 			return 1.33333f;
+		if ("x-large".equals(value))
+			return 1.66666f;
+		if ("xx-large".equals(value))
+			return 2f;
 		return 1.2f;
 	}
 
@@ -229,6 +233,7 @@ public class VirtualKeypad {
 
 	public boolean onTouch(MotionEvent event, boolean flip) {
 		int action = event.getAction();
+		int pointerUpId = -1;
 		
 		switch (action & MotionEvent.ACTION_MASK) {
 		case MotionEvent.ACTION_UP:
@@ -236,6 +241,8 @@ public class VirtualKeypad {
 			setKeyStates(0);
 			return true;
 
+		case MotionEvent.ACTION_POINTER_UP:
+			pointerUpId = (action & MotionEvent.ACTION_POINTER_INDEX_MASK) >> MotionEvent.ACTION_POINTER_INDEX_SHIFT;
 		case MotionEvent.ACTION_DOWN:
 		case MotionEvent.ACTION_POINTER_DOWN:
 		case MotionEvent.ACTION_MOVE:
@@ -253,8 +260,9 @@ public class VirtualKeypad {
 			float y = getEventY(event, i, flip);
 			Control c = findControl(x, y);
 			if (c != null) {
-				states |= getControlStates(c, x, y,
-						Wrapper.MotionEvent_getSize(event, i));
+				if (pointerUpId != i)
+					states |= getControlStates(c, x, y,
+							Wrapper.MotionEvent_getSize(event, i));
 				foundControl = true;
 			}
 		}

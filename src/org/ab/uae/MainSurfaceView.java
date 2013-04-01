@@ -52,11 +52,15 @@ public class MainSurfaceView  extends SurfaceView implements SurfaceHolder.Callb
         if( event.getAction() == MotionEvent.ACTION_MOVE )
         	action = 2;
         if (  action >= 0 ) {
-        	
-        	int x = (int) ((event.getX() / (float) width)* (float) mRenderer.bufferWidth);
-        	int y = (int) ((event.getY() / (float) height)* (float) mRenderer.bufferHeight);
-            nativeMouse(x , y, action, 0 );
-        }
+    		int x = (int) (event.getX() / scaleX);
+    		int y = (int) (event.getY() / scaleY);
+    		if (x > mRenderer.bufferWidth)
+    			y = mRenderer.bufferWidth;
+    		if (y > mRenderer.bufferHeight)
+    			y = mRenderer.bufferHeight;
+    		nativeMouse(x , y, action, 0 );
+       	}
+    
         return true;
     }
     
@@ -108,14 +112,14 @@ public class MainSurfaceView  extends SurfaceView implements SurfaceHolder.Callb
 		keyCode = h[0];
 		joystick_nr = h[1];
 		
-		if (keyCode == KeyEvent.KEYCODE_O) {
+		if (keyCode == KeyEvent.KEYCODE_O || keyCode == (500+KeyEvent.KEYCODE_O)) {
 			mParent.setRightMouse(0);
 			mParent.mouse_button = 0;
 			nativeMouse(0, 0, 0, 1);
 			return true;
 		}
 		
-		if (keyCode == KeyEvent.KEYCODE_L) {
+		if (keyCode == KeyEvent.KEYCODE_L || keyCode == (500+KeyEvent.KEYCODE_L)) {
 			mParent.setRightMouse(1);
 			mParent.mouse_button = 1;
 			nativeMouse(0, 0, 0, 1);
@@ -150,16 +154,18 @@ public class MainSurfaceView  extends SurfaceView implements SurfaceHolder.Callb
 		keyCode = h[0];
 		joystick_nr = h[1];
 		
-		if (keyCode == KeyEvent.KEYCODE_O) {
+		if (keyCode == KeyEvent.KEYCODE_O || keyCode == (500+KeyEvent.KEYCODE_O)) {
 			mParent.setRightMouse(0);
 			mParent.mouse_button = 0;
+			try { Thread.sleep(100); } catch (InterruptedException e) {} // if down + up is too fast, it's not recognized in the emu
 			nativeMouse(0, 0, 1, 1);
 			return true;
 		}
 		
-		if (keyCode == KeyEvent.KEYCODE_L) {
+		if (keyCode == KeyEvent.KEYCODE_L || keyCode == (500+KeyEvent.KEYCODE_L)) {
 			mParent.setRightMouse(1);
 			mParent.mouse_button = 1;
+			try { Thread.sleep(100); } catch (InterruptedException e) {} // if down + up is too fast, it's not recognized in the emu
 			nativeMouse(0, 0, 1, 1);
 			//mParent.setRightMouse(0);
 			return true;
