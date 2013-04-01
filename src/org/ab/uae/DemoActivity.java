@@ -96,8 +96,8 @@ class Globals {
 	public static String PREFKEY_F4 = "f4_location";
 	public static int PREFKEY_F4_INT = 6;
 	
-	public static String PREFKEY_ROMKEY = "romkey_location";
-	public static int PREFKEY_ROMKEY_INT = 7;
+	//public static String PREFKEY_ROMKEY = "romkey_location";
+	//public static int PREFKEY_ROMKEY_INT = 7;
 	
 	public static String PREFKEY_SOUND = "sound";
 	public static String PREFKEY_DRIVESTATUS = "drivestatus";
@@ -249,18 +249,21 @@ protected VirtualKeypad vKeyPad = null;
     	SharedPreferences sp = PreferenceManager.getDefaultSharedPreferences(this);
     	onSharedPreferenceChanged(sp, "useInputMethod");
     	String rPath = sp.getString(Globals.PREFKEY_ROM, null);
-    	romKeyPath = sp.getString(Globals.PREFKEY_ROMKEY, null);
+    	File rPathFile = new File(rPath);
+    	if (rPathFile.exists()) {
+    		romKeyPath = new File(rPathFile.getParentFile(), "rom.key").getAbsolutePath();
+    	}
     	String hdDir = sp.getString(Globals.PREFKEY_HDD, null);
     	String hdFile = sp.getString(Globals.PREFKEY_HDF, null);
     	String f1P = sp.getString(Globals.PREFKEY_F1, null);
     	String f2P = sp.getString(Globals.PREFKEY_F2, null);
     	String f3P = sp.getString(Globals.PREFKEY_F3, null);
     	String f4P = sp.getString(Globals.PREFKEY_F4, null);
-    	boolean autofs = sp.getBoolean(Globals.PREFKEY_AFS, true);
+    	boolean autofs = false; //sp.getBoolean(Globals.PREFKEY_AFS, true);
     	boolean bsound = sp.getBoolean(Globals.PREFKEY_SOUND, false);
     	boolean drivestatus = sp.getBoolean(Globals.PREFKEY_DRIVESTATUS, false);
     	boolean ntsc = sp.getBoolean(Globals.PREFKEY_NTSC, false);
-    	int fs = Integer.parseInt(sp.getString(Globals.PREFKEY_FS, "2"));
+    	int fs = Integer.parseInt(sp.getString(Globals.PREFKEY_FS, "1"));
     	
     	int cpu_model = Integer.parseInt(sp.getString(Globals.PREF_CPU_MODEL, "0"));
     	int chip_mem = Integer.parseInt(sp.getString(Globals.PREF_CHIP_MEM, "1"));

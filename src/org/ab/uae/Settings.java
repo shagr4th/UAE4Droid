@@ -30,7 +30,7 @@ public class Settings extends PreferenceActivity implements OnPreferenceChangeLi
     }
 	 
 	 Preference romPref ;
-	 Preference romKeyPref ;
+	 //Preference romKeyPref ;
 	 Preference hddFile ;
 	 Preference hdfFile ;
 	 Preference floppy1 ;
@@ -73,7 +73,7 @@ public class Settings extends PreferenceActivity implements OnPreferenceChangeLi
 	        inlinePrefCat.addPreference(romPref);    
 	        
 	        
-	        romKeyPref = new Preference(this) {
+	        /*romKeyPref = new Preference(this) {
 
 				@Override
 				protected void onClick() {
@@ -88,7 +88,7 @@ public class Settings extends PreferenceActivity implements OnPreferenceChangeLi
 	        String romkeypath = sp.getString(Globals.PREFKEY_ROMKEY, null);
 	        if (romkeypath != null)
 	        	romKeyPref.setSummary(romkeypath);
-	        inlinePrefCat.addPreference(romKeyPref); 
+	        inlinePrefCat.addPreference(romKeyPref); */
 	        
 	        hdfFile = new Preference(this) {
 
@@ -293,16 +293,16 @@ public class Settings extends PreferenceActivity implements OnPreferenceChangeLi
 	        toggleSoundPref.setDefaultValue(false);
 	        perfPrefCat.addPreference(toggleSoundPref);
 	        
-	        CheckBoxPreference toggleAFSPref = new CheckBoxPreference(this);
+	        /*CheckBoxPreference toggleAFSPref = new CheckBoxPreference(this);
 	        toggleAFSPref.setKey(Globals.PREFKEY_AFS);
 	        toggleAFSPref.setTitle(R.string.auto_frameskip);
 	        toggleAFSPref.setDefaultValue(true);
-	        perfPrefCat.addPreference(toggleAFSPref);
+	        perfPrefCat.addPreference(toggleAFSPref);*/
 	        
 	        ListPreference fs1Pref = new ListPreference(this);
 	        fs1Pref.setEntries(R.array.fs_entries);
 	        fs1Pref.setEntryValues(R.array.fs_entries);
-	        fs1Pref.setDefaultValue("2");
+	        fs1Pref.setDefaultValue("1");
 	        fs1Pref.setDialogTitle(R.string.frameskip_value);
 	        fs1Pref.setKey(Globals.PREFKEY_FS);
 	        fs1Pref.setTitle(R.string.frameskip_value);
@@ -478,11 +478,11 @@ public class Settings extends PreferenceActivity implements OnPreferenceChangeLi
 				 prefKey = Globals.PREFKEY_ROM;
 				 path = extras.getStringExtra("currentFile");
 				 romPref.setSummary(path);
-			 } else if (requestCode == Globals.PREFKEY_ROMKEY_INT) {
+			 } /*else if (requestCode == Globals.PREFKEY_ROMKEY_INT) {
 				 prefKey = Globals.PREFKEY_ROMKEY;
 				 path = extras.getStringExtra("currentFile");
 				 romKeyPref.setSummary(path);
-			 } else if (requestCode == Globals.PREFKEY_HDD_INT) {
+			 } */else if (requestCode == Globals.PREFKEY_HDD_INT) {
 				 prefKey = Globals.PREFKEY_HDD;
 				 path = extras.getStringExtra("currentFile");
 				 hddFile.setSummary(path);
